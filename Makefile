@@ -11,6 +11,7 @@ build: clean
 install:
 	@pkill -x signal-desktop 2>/dev/null || true
 	@sudo rpm -Uvh output/signal-desktop-$$(cat ./SIGNAL_VERSION).x86_64.rpm
+	@sudo sed -i 's|Exec=/opt/Signal/signal-desktop.*|Exec=/opt/Signal/signal-desktop --use-tray-icon %U|g' /usr/share/applications/signal-desktop.desktop
 
 clean:
 	@podman unshare rm -rf ./output
