@@ -1,0 +1,17 @@
+.PHONY=build clean
+
+all: build
+
+build: clean
+	@mkdir -p output
+	@podman build --build-arg=SIGNAL_VERSION=$$(cat ./SIGNAL_VERSION) -t signal-desktop-rpm:latest .
+	@podman create --name signal-desktop-rpm signal-desktop-rpm:latest
+	@podman cp signal-desktop-rpm:/root/Signal-Desktop/release/signal-desktop-$$(cat ./SIGNAL_VERSION).x86_64.rpm ./output
+
+install:
+	@pkill -x signal-desktop 2>/dev/null || true
+	@sudo rpm -Uvh output/signal-desktop-$$(cat ./SIGNAL_VERSION).x86_64.rpm
+
+clean:
+	@podman unshare rm -rf ./output
+	@podman rm -f signal-desktop-rpm 2>/dev/null || true
