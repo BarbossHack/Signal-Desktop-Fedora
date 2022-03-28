@@ -1,4 +1,4 @@
-# Signal-Desktop-RPM
+# Signal-Desktop-Fedora
 
 A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Desktop) RPM package for Fedora 35 !
 
