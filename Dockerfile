@@ -1,4 +1,4 @@
-FROM docker.io/fedora:35
+FROM docker.io/fedora:36
 ARG SIGNAL_VERSION
 
 RUN dnf update -y && \
