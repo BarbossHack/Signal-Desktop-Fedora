@@ -11,9 +11,9 @@ make install
 
 ## Signal version
 
-You can set the Signal-Desktop version in `SIGNAL_VERSION` file.
+I will try to keep this script up to date, but you can set the Signal-Desktop version in `SIGNAL_VERSION` file.
 
-Should be a valid `tag` without `v` <https://github.com/signalapp/Signal-Desktop/tags>
+It should be a valid `tag` from <https://github.com/signalapp/Signal-Desktop/tags>
 
 ## Credits
 

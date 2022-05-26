@@ -1,5 +1,4 @@
 FROM docker.io/fedora:36
-ARG SIGNAL_VERSION
 
 RUN dnf update -y && \
     dnf install -y unzip g++ npm python make gcc git rpm-build libxcrypt-compat patch
@@ -8,6 +7,8 @@ RUN dnf update -y && \
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
     dnf install -y git-lfs && \
     git lfs install
+
+ARG SIGNAL_VERSION
 
 # Install yarn and nvm
 ENV NVM_DIR /root/.nvm
