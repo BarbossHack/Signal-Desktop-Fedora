@@ -1,11 +1,13 @@
 .PHONY=build install clean
+
 SIGNAL_VERSION=$$(cat ./SIGNAL_VERSION | tr -d vV)
+FEDORA_VERSION=$$(cat ./FEDORA_VERSION)
 
 all: build
 
 build: clean
 	@mkdir -p output
-	@podman build --build-arg=SIGNAL_VERSION=$(SIGNAL_VERSION) -t signal-desktop-rpm:latest .
+	@podman build --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=SIGNAL_VERSION=$(SIGNAL_VERSION) -t signal-desktop-rpm:latest .
 	@podman create --name signal-desktop-rpm signal-desktop-rpm:latest
 	@podman cp signal-desktop-rpm:/root/Signal-Desktop/release/signal-desktop-$(SIGNAL_VERSION).x86_64.rpm ./output
 

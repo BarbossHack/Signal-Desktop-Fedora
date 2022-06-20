@@ -1,4 +1,5 @@
-FROM docker.io/fedora:36
+ARG FEDORA_VERSION
+FROM docker.io/fedora:${FEDORA_VERSION}
 
 RUN dnf update -y && \
     dnf install -y unzip g++ npm python make gcc git rpm-build libxcrypt-compat patch
