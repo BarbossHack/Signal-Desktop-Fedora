@@ -2,6 +2,11 @@
 
 A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Desktop) RPM package for Fedora !
 
+Last versions (can be configured) :
+
+- Fedora 36
+- Signal-Desktop v5.47.0
+
 ## Usage
 
 ```bash
