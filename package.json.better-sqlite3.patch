@@ -1,0 +1,13 @@
+diff --git a/package.json b/package.json
+index 834b61a..b3f9975 100644
+--- a/package.json
++++ b/package.json
+@@ -87,7 +87,7 @@
+     "array-move": "2.1.0",
+     "axe-core": "4.1.4",
+     "backbone": "1.4.0",
+-    "better-sqlite3": "https://github.com/signalapp/better-sqlite3#3c4a7eebba3d5f5d8cb88fe83be1c01b8c0dea7d",
++    "better-sqlite3": "/root/Signal-Desktop/node_modules/better-sqlite3",
+     "bezier-easing": "2.1.0",
+     "blob-util": "2.0.2",
+     "blueimp-load-image": "5.14.0",
