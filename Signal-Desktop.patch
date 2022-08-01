@@ -1,10 +1,10 @@
 diff --git a/package.json b/package.json
-index d49dba45e..6316d77c2 100644
+index 67ed6eb..f65abf9 100644
 --- a/package.json
 +++ b/package.json
-@@ -388,7 +388,7 @@
-         "node_modules/sharp"
-       ],
+@@ -384,7 +384,7 @@
+         "StartupWMClass": "Signal"
+       },
        "target": [
 -        "deb"
 +        "rpm"

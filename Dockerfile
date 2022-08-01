@@ -19,10 +19,11 @@ RUN npm install --global yarn && \
     nvm install $(curl -o- https://raw.githubusercontent.com/signalapp/Signal-Desktop/v${SIGNAL_VERSION}/.nvmrc)
 
 # Clone and patch Signal-Desktop
-COPY package.json.patch /root/package.json.patch
+COPY Signal-Desktop.patch /root/Signal-Desktop.patch
 RUN cd /root && \
     git clone -b v${SIGNAL_VERSION} --depth 1 https://github.com/signalapp/Signal-Desktop.git && \
-    patch /root/Signal-Desktop/package.json /root/package.json.patch
+    cd Signal-Desktop && \
+    patch -p1 < /root/Signal-Desktop.patch
 
 # Build Signal-Desktop
 RUN cd /root/Signal-Desktop && \
