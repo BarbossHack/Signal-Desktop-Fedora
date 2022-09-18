@@ -32,3 +32,8 @@ RUN cd /root/Signal-Desktop && \
     yarn install --frozen-lockfileyarn && \
     yarn generate && \
     yarn build-release
+
+# Export rpm and clean
+RUN mkdir -p /output && \
+    cp /root/Signal-Desktop/release/signal-desktop-*.rpm /output && \
+    rm -rf /root/Signal-Desktop
