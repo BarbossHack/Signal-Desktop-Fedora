@@ -12,6 +12,8 @@ build: clean
 	@podman cp signal-desktop-rpm:/output/signal-desktop-$(SIGNAL_VERSION).x86_64.rpm ./output
 
 install:
+	@-pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null && sleep 2
+	@-pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null
 	@sudo rpm -Uvh --force output/signal-desktop-$(SIGNAL_VERSION).x86_64.rpm
 	@sudo sed -i 's|Exec=/opt/Signal/signal-desktop.*|Exec=/opt/Signal/signal-desktop --use-tray-icon %U|g' /usr/share/applications/signal-desktop.desktop
 
