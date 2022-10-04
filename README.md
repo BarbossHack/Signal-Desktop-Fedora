@@ -5,7 +5,7 @@ A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Deskt
 Last versions (can be configured) :
 
 - Fedora 36
-- Signal-Desktop v5.59.0
+- Signal-Desktop v5.61.1
 
 ## Usage
 
