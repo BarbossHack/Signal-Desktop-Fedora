@@ -1,0 +1,87 @@
+diff --git a/package.json b/package.json
+index 680ac06..ca34d34 100644
+--- a/package.json
++++ b/package.json
+@@ -390,7 +390,7 @@
+         "StartupWMClass": "Signal"
+       },
+       "target": [
+-        "deb"
++        "rpm"
+       ],
+       "icon": "build/icons/png"
+     },
+diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
+index 334c007..d9c3dd6 100644
+--- a/ts/components/conversation/Message.tsx
++++ b/ts/components/conversation/Message.tsx
+@@ -2473,7 +2473,8 @@ export class Message extends React.PureComponent<Props, State> {
+     const { expired, expiring, isSelected, imageBroken } = this.state;
+ 
+     if (expired) {
+-      return null;
++      // Avoid deleting expired messages from UX
++      //return null;
+     }
+ 
+     if (isSticker && (imageBroken || !attachments || !attachments.length)) {
+@@ -2488,7 +2489,7 @@ export class Message extends React.PureComponent<Props, State> {
+           shouldCollapseAbove && 'module-message--collapsed-above',
+           shouldCollapseBelow && 'module-message--collapsed-below',
+           isSelected ? 'module-message--selected' : null,
+-          expiring ? 'module-message--expired' : null
++          //expiring ? 'module-message--expired' : null
+         )}
+         tabIndex={0}
+         // We need to have a role because screenreaders need to be able to focus here to
+diff --git a/ts/models/messages.ts b/ts/models/messages.ts
+index 933c8db..730abbe 100644
+--- a/ts/models/messages.ts
++++ b/ts/models/messages.ts
+@@ -3559,6 +3559,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
+     del: DeleteModel,
+     shouldPersist = true
+   ): Promise<void> {
++
++    // Add a marker to tell message has been deleted
++    this.set({
++      body: `❌ Deleted ❌ ${this.get('body')}`,
++    });
++
++    // Save the modifyed message to DB
++    if (shouldPersist) {
++      await window.Signal.Data.saveMessage(this.attributes, {
++        ourUuid: window.textsecure.storage.user.getCheckedUuid().toString(),
++      });
++    }
++    // Update last message on conv
++    this.getConversation()?.updateLastMessage();
++
++    // Return function before doing something else (delete content, etc.)
++    return;
++
+     if (this.deletingForEveryone || this.get('deletedForEveryone')) {
+       return;
+     }
+diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
+index 0859a81..31f5785 100644
+--- a/ts/services/expiringMessagesDeletion.ts
++++ b/ts/services/expiringMessagesDeletion.ts
+@@ -19,6 +19,8 @@ class ExpiringMessagesDeletionService {
+   }
+ 
+   private async destroyExpiredMessages() {
++    // Avoid deleting expired messages from DB
++    return;
+     try {
+       window.SignalContext.log.info(
+         'destroyExpiredMessages: Loading messages...'
+@@ -81,6 +83,8 @@ class ExpiringMessagesDeletionService {
+   }
+ 
+   private async checkExpiringMessages() {
++    // Avoid deleting expired messages from DB
++    return;
+     window.SignalContext.log.info(
+       'checkExpiringMessages: checking for expiring messages'
+     );

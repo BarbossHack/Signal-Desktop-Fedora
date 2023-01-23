@@ -14,6 +14,17 @@ make
 make install
 ```
 
+### Custom patch
+
+You can apply a custom patch file with PATCH_FILE argument in the make command line.
+
+For example, you can use `Signal-Desktop-persistent-messages.patch` which will ignore all kinds of message deletion (`expiration` and `delete for everyone`).
+
+```bash
+make PATCH_FILE=Signal-Desktop-persistent-messages.patch
+make install
+```
+
 ## Signal version
 
 I will try to keep this script up to date, but you can set the Signal-Desktop version in `SIGNAL_VERSION` file.

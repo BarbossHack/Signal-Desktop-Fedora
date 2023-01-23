@@ -2,12 +2,13 @@
 
 SIGNAL_VERSION=$$(cat ./SIGNAL_VERSION | tr -d vV)
 FEDORA_VERSION=$$(cat ./FEDORA_VERSION)
+PATCH_FILE="Signal-Desktop.patch"
 
 all: build
 
 build: clean
 	@mkdir -p output
-	@podman build --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=SIGNAL_VERSION=$(SIGNAL_VERSION) -t signal-desktop-rpm:latest .
+	@podman build --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=SIGNAL_VERSION=$(SIGNAL_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) -t signal-desktop-rpm:latest .
 	@podman create --name signal-desktop-rpm signal-desktop-rpm:latest
 	@podman cp signal-desktop-rpm:/output/signal-desktop-$(SIGNAL_VERSION).x86_64.rpm ./output
 
