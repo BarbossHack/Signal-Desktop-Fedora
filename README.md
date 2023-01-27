@@ -5,7 +5,15 @@ A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Deskt
 Last versions (can be configured) :
 
 - Fedora 37
-- Signal-Desktop v6.2.0
+- Signal-Desktop v6.3.0
+
+## Requirements
+
+Podman and make are the only requirements
+
+```bash
+sudo dnf install -y podman make
+```
 
 ## Usage
 

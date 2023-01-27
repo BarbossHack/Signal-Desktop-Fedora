@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 680ac06..ca34d34 100644
+index bd686f3..0cc8835 100644
 --- a/package.json
 +++ b/package.json
-@@ -390,7 +390,7 @@
+@@ -382,7 +382,7 @@
          "StartupWMClass": "Signal"
        },
        "target": [
@@ -12,10 +12,10 @@ index 680ac06..ca34d34 100644
        "icon": "build/icons/png"
      },
 diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index 334c007..d9c3dd6 100644
+index 87b56fb..f1dfad3 100644
 --- a/ts/components/conversation/Message.tsx
 +++ b/ts/components/conversation/Message.tsx
-@@ -2473,7 +2473,8 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -2537,7 +2537,8 @@ export class Message extends React.PureComponent<Props, State> {
      const { expired, expiring, isSelected, imageBroken } = this.state;
  
      if (expired) {
@@ -25,7 +25,7 @@ index 334c007..d9c3dd6 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -2488,7 +2489,7 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -2552,7 +2553,7 @@ export class Message extends React.PureComponent<Props, State> {
            shouldCollapseAbove && 'module-message--collapsed-above',
            shouldCollapseBelow && 'module-message--collapsed-below',
            isSelected ? 'module-message--selected' : null,
@@ -35,10 +35,10 @@ index 334c007..d9c3dd6 100644
          tabIndex={0}
          // We need to have a role because screenreaders need to be able to focus here to
 diff --git a/ts/models/messages.ts b/ts/models/messages.ts
-index 933c8db..730abbe 100644
+index 6b4c0c7..e2d0dbc 100644
 --- a/ts/models/messages.ts
 +++ b/ts/models/messages.ts
-@@ -3559,6 +3559,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
+@@ -3596,6 +3596,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
      del: DeleteModel,
      shouldPersist = true
    ): Promise<void> {
@@ -64,7 +64,7 @@ index 933c8db..730abbe 100644
        return;
      }
 diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
-index 0859a81..31f5785 100644
+index 1b078a2..2fb33c1 100644
 --- a/ts/services/expiringMessagesDeletion.ts
 +++ b/ts/services/expiringMessagesDeletion.ts
 @@ -19,6 +19,8 @@ class ExpiringMessagesDeletionService {
@@ -76,7 +76,7 @@ index 0859a81..31f5785 100644
      try {
        window.SignalContext.log.info(
          'destroyExpiredMessages: Loading messages...'
-@@ -81,6 +83,8 @@ class ExpiringMessagesDeletionService {
+@@ -82,6 +84,8 @@ class ExpiringMessagesDeletionService {
    }
  
    private async checkExpiringMessages() {
