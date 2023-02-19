@@ -14,7 +14,7 @@ ARG SIGNAL_VERSION
 # Install yarn and nvm
 ENV NVM_DIR /root/.nvm
 RUN npm install --global yarn && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash && \
     source /root/.nvm/nvm.sh --no-use && \
     nvm install $(curl -o- https://raw.githubusercontent.com/signalapp/Signal-Desktop/v${SIGNAL_VERSION}/.nvmrc)
 
