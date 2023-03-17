@@ -10,7 +10,10 @@ RUN dnf update -y && \
     git lfs install && \
     dnf clean all
 
+# Install yarn and nvm
 ENV NVM_DIR /root/.nvm
+RUN npm install --global yarn && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 #Add patch file
 ARG PATCH_FILE

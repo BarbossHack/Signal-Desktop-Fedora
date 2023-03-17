@@ -3,11 +3,7 @@
 set -e
 set -u
 
-echo "SIGNAL_VERSION: ${SIGNAL_VERSION}"
-
-# Install yarn and nvm
-npm install --global yarn
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+# Install nvm version used by Signal-Desktop
 source /root/.nvm/nvm.sh --no-use
 nvm install $(curl -o- https://raw.githubusercontent.com/signalapp/Signal-Desktop/v${SIGNAL_VERSION}/.nvmrc)
 
@@ -18,7 +14,6 @@ cd Signal-Desktop
 patch -p1 </root/Signal-Desktop.patch
 
 # Build Signal-Desktop
-source /root/.nvm/nvm.sh --no-use
 nvm use
 yarn install --frozen-lockfileyarn
 yarn generate
