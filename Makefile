@@ -8,9 +8,8 @@ all: build
 
 build: clean
 	@mkdir -p output
-	@podman build --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=SIGNAL_VERSION=$(SIGNAL_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) -t signal-desktop-rpm:latest .
-	@podman create --name signal-desktop-rpm signal-desktop-rpm:latest
-	@podman cp signal-desktop-rpm:/output/signal-desktop-$(SIGNAL_VERSION).x86_64.rpm ./output
+	@podman build --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) -t signal-desktop-rpm:latest .
+	@podman run -it --rm -v $$PWD/output:/output:Z -e SIGNAL_VERSION=$(SIGNAL_VERSION) signal-desktop-rpm:latest
 
 install:
 	@-pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null && sleep 2
