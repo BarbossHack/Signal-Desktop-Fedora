@@ -1,15 +1,14 @@
 # Signal-Desktop-Fedora
 
-A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Desktop) RPM package for Fedora !
+A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Desktop) RPM package for Fedora.
 
-Last versions (can be configured) :
+Currently tested for :
 
 - Fedora 37
 - Signal-Desktop v6.12.0
+- x86_64 and aarch64 architectures
 
 ## Requirements
-
-Podman and make are the only requirements
 
 ```bash
 sudo dnf install -y podman make
@@ -41,10 +40,10 @@ It should be a valid `tag` from <https://github.com/signalapp/Signal-Desktop/tag
 
 ## Fedora version
 
-Current supported Fedora version is 37, but you can change the version in `FEDORA_VERSION` file.
+Currently supported Fedora version is 37, but you can change it in `FEDORA_VERSION` file.
 
-## Credits
+## Sources
 
-Thanks to [yea-hung](https://github.com/signalapp/Signal-Desktop/issues/4530#issuecomment-1079834967) and [michelamarie](https://github.com/michelamarie/fedora-signal/wiki/How-to-compile-Signal-Desktop-for-Fedora).
+<https://github.com/signalapp/Signal-Desktop/issues/4530#issuecomment-1079834967>
 
-[Signal-Desktop](https://github.com/signalapp/Signal-Desktop)
+<https://github.com/michelamarie/fedora-signal/wiki/How-to-compile-Signal-Desktop-for-Fedora>
