@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index bd686f3..0cc8835 100644
+index 22882be..7bedff5 100644
 --- a/package.json
 +++ b/package.json
-@@ -382,7 +382,7 @@
+@@ -383,7 +383,7 @@
          "StartupWMClass": "Signal"
        },
        "target": [
@@ -12,11 +12,11 @@ index bd686f3..0cc8835 100644
        "icon": "build/icons/png"
      },
 diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index 87b56fb..f1dfad3 100644
+index daed46a..8d4a979 100644
 --- a/ts/components/conversation/Message.tsx
 +++ b/ts/components/conversation/Message.tsx
-@@ -2537,7 +2537,8 @@ export class Message extends React.PureComponent<Props, State> {
-     const { expired, expiring, isSelected, imageBroken } = this.state;
+@@ -2574,7 +2574,8 @@ export class Message extends React.PureComponent<Props, State> {
+     const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
 -      return null;
@@ -25,20 +25,20 @@ index 87b56fb..f1dfad3 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -2552,7 +2553,7 @@ export class Message extends React.PureComponent<Props, State> {
-           shouldCollapseAbove && 'module-message--collapsed-above',
-           shouldCollapseBelow && 'module-message--collapsed-below',
-           isSelected ? 'module-message--selected' : null,
--          expiring ? 'module-message--expired' : null
-+          //expiring ? 'module-message--expired' : null
-         )}
-         tabIndex={0}
-         // We need to have a role because screenreaders need to be able to focus here to
+@@ -2650,7 +2651,7 @@ export class Message extends React.PureComponent<Props, State> {
+             shouldCollapseAbove && 'module-message--collapsed-above',
+             shouldCollapseBelow && 'module-message--collapsed-below',
+             isTargeted ? 'module-message--targeted' : null,
+-            expiring ? 'module-message--expired' : null
++            //expiring ? 'module-message--expired' : null
+           )}
+           data-testid={timestamp}
+           tabIndex={0}
 diff --git a/ts/models/messages.ts b/ts/models/messages.ts
-index 6b4c0c7..e2d0dbc 100644
+index a44c1f9..f50a855 100644
 --- a/ts/models/messages.ts
 +++ b/ts/models/messages.ts
-@@ -3596,6 +3596,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
+@@ -3648,6 +3648,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
      del: DeleteModel,
      shouldPersist = true
    ): Promise<void> {
@@ -64,10 +64,10 @@ index 6b4c0c7..e2d0dbc 100644
        return;
      }
 diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
-index 1b078a2..2fb33c1 100644
+index 20d3691..edd282b 100644
 --- a/ts/services/expiringMessagesDeletion.ts
 +++ b/ts/services/expiringMessagesDeletion.ts
-@@ -19,6 +19,8 @@ class ExpiringMessagesDeletionService {
+@@ -20,6 +20,8 @@ class ExpiringMessagesDeletionService {
    }
  
    private async destroyExpiredMessages() {
@@ -76,7 +76,7 @@ index 1b078a2..2fb33c1 100644
      try {
        window.SignalContext.log.info(
          'destroyExpiredMessages: Loading messages...'
-@@ -82,6 +84,8 @@ class ExpiringMessagesDeletionService {
+@@ -87,6 +89,8 @@ class ExpiringMessagesDeletionService {
    }
  
    private async checkExpiringMessages() {
