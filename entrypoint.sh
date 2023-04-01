@@ -15,6 +15,7 @@ patch -p1 </root/Signal-Desktop.patch
 
 # Build Signal-Desktop
 nvm use
+export USE_SYSTEM_FPM=true
 yarn install --frozen-lockfileyarn
 yarn generate
 yarn build-release
