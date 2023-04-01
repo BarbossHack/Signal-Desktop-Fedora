@@ -3,12 +3,13 @@
 SIGNAL_VERSION=$$(cat ./SIGNAL_VERSION | tr -d vV)
 FEDORA_VERSION=$$(cat ./FEDORA_VERSION)
 PATCH_FILE="Signal-Desktop.patch"
+ARCH=$$(if [[ "$$(uname -m)" == "aarch64" ]] then echo "arm64v8"; else echo "amd64"; fi)
 
 all: build
 
 build: clean
 	@mkdir -p output
-	@podman build --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) -t signal-desktop-rpm:latest .
+	@podman build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) -t signal-desktop-rpm:latest .
 	@podman run -it --rm -v $$PWD/output:/output:Z -e SIGNAL_VERSION=$(SIGNAL_VERSION) signal-desktop-rpm:latest
 
 install:

@@ -15,7 +15,7 @@ patch -p1 </root/Signal-Desktop.patch
 
 # Build Signal-Desktop
 nvm use
-export USE_SYSTEM_FPM=true
+if [[ "${ARCH}" == "aarch64" ]]; then export USE_SYSTEM_FPM=true; fi
 yarn install --frozen-lockfileyarn
 yarn generate
 yarn build-release

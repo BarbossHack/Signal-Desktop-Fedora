@@ -1,10 +1,14 @@
+ARG ARCH
 ARG FEDORA_VERSION
-FROM docker.io/arm64v8/fedora:${FEDORA_VERSION}
+FROM docker.io/${ARCH}/fedora:${FEDORA_VERSION}
+
+ARG ARCH
+ENV ARCH ${ARCH}
 
 # Install build requirements
 RUN dnf update -y && \
-    dnf install -y unzip g++ npm python make gcc git rpm-build libxcrypt-compat patch ruby && \
-    gem install fpm && \
+    dnf install -y unzip g++ npm python make gcc git rpm-build libxcrypt-compat patch && \
+    if [[ "${ARCH}" == "aarch64" ]]; then dnf install -y ruby && gem install fpm; fi && \
 # Install git-lfs
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
     dnf install -y git-lfs && \
