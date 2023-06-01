@@ -1,7 +1,7 @@
 .PHONY=build install clean
 
-SIGNAL_VERSION=$$(cat ./SIGNAL_VERSION | tr -d vV)
-FEDORA_VERSION=$$(cat ./FEDORA_VERSION)
+SIGNAL_VERSION=$$(cat ./SIGNAL_VERSION | head -n 1 | tr -d vV)
+FEDORA_VERSION=$$(cat ./FEDORA_VERSION | head -n 1)
 PATCH_FILE="Signal-Desktop.patch"
 ARCH=$$(if [[ "$$(uname -m)" == "aarch64" ]]; then echo "arm64v8"; else echo "amd64"; fi)
 
