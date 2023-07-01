@@ -4,7 +4,7 @@ A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Deskt
 
 Currently tested for :
 
-- Fedora 37
+- Fedora 38
 - Signal-Desktop v6.23.0
 - x86_64 and aarch64 architectures
 
@@ -40,7 +40,7 @@ It should be a valid `tag` from <https://github.com/signalapp/Signal-Desktop/tag
 
 ## Fedora version
 
-Currently supported Fedora version is 37, but you can change it in `FEDORA_VERSION` file.
+Currently supported Fedora version is 38, but you can change it in `FEDORA_VERSION` file.
 
 ## Sources
 
