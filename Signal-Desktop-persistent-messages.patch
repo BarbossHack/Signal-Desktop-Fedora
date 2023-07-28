@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 8690074..9663bc7 100644
+index 72defb0..00de861 100644
 --- a/package.json
 +++ b/package.json
-@@ -397,7 +397,7 @@
+@@ -398,7 +398,7 @@
          "StartupWMClass": "Signal"
        },
        "target": [
@@ -12,10 +12,10 @@ index 8690074..9663bc7 100644
        "icon": "build/icons/png"
      },
 diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index 3b5d6a6..a5b188d 100644
+index 2a2ccff..49abc37 100644
 --- a/ts/components/conversation/Message.tsx
 +++ b/ts/components/conversation/Message.tsx
-@@ -2640,7 +2640,8 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -2663,7 +2663,8 @@ export class Message extends React.PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
@@ -25,7 +25,7 @@ index 3b5d6a6..a5b188d 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -2733,7 +2734,7 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -2756,7 +2757,7 @@ export class Message extends React.PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
@@ -35,10 +35,10 @@ index 3b5d6a6..a5b188d 100644
            data-testid={timestamp}
            tabIndex={0}
 diff --git a/ts/models/messages.ts b/ts/models/messages.ts
-index a7b9a0d..ece403b 100644
+index 2aa22ad..32c6e54 100644
 --- a/ts/models/messages.ts
 +++ b/ts/models/messages.ts
-@@ -3482,6 +3482,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
+@@ -3485,6 +3485,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
      del: DeleteModel,
      shouldPersist = true
    ): Promise<void> {
@@ -85,3 +85,17 @@ index ceee06d..4befc74 100644
      window.SignalContext.log.info(
        'checkExpiringMessages: checking for expiring messages'
      );
+diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
+index 83c2725..f088c3c 100644
+--- a/ts/util/sendReceipts.ts
++++ b/ts/util/sendReceipts.ts
+@@ -55,6 +55,9 @@ export async function sendReceipts({
+     return;
+   }
+ 
++  // do not send read-receipts
++  return;
++
+   log.info(`Starting receipt send of type ${type}`);
+ 
+   const receiptsBySenderId: Map<string, Array<Receipt>> = receipts.reduce(

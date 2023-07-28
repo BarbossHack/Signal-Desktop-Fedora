@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 8690074..9663bc7 100644
+index 72defb0..00de861 100644
 --- a/package.json
 +++ b/package.json
-@@ -397,7 +397,7 @@
+@@ -398,7 +398,7 @@
          "StartupWMClass": "Signal"
        },
        "target": [
