@@ -13,12 +13,16 @@ RUN dnf update -y && \
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
     dnf install -y git-lfs && \
     git lfs install && \
+# Fix node-gyp distutils not found
+    dnf install -y python3-pip && \
+    pip install packaging && \
+# Clean
     dnf clean all
 
 # Install yarn and nvm
 ENV NVM_DIR /root/.nvm
 RUN npm install --global yarn && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
 # Add patch file
 ARG PATCH_FILE
