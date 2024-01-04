@@ -16,7 +16,7 @@ patch -p1 </root/Signal-Desktop.patch
 # Build Signal-Desktop
 nvm use
 if [[ "${ARCH}" == "arm64v8" ]]; then export USE_SYSTEM_FPM=true; fi
-yarn install --frozen-lockfileyarn
+yarn install --frozen-lockfile
 yarn generate
 yarn build-release
 
