@@ -16,16 +16,12 @@ patch -p1 </root/Signal-Desktop.patch
 # Build Signal-Desktop
 nvm use
 if [[ "${ARCH}" == "arm64v8" ]]; then export USE_SYSTEM_FPM=true; fi
-yarn install --frozen-lockfileyarn
+yarn install --frozen-lockfile
 yarn generate
 yarn build-release
 
-# Export rpm and clean
+# Export rpm
 mkdir -p /output
 cp /root/Signal-Desktop/release/signal-desktop-*.rpm /output
-cd /root
-rm -rf /root/Signal-Desktop
-yarn cache clean --all
-npm cache clean --force
 
 echo -e "\e[42;30mDone !\e[0m"
