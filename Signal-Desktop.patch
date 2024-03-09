@@ -1,13 +1,13 @@
 diff --git a/package.json b/package.json
-index 72defb0..00de861 100644
+index 4d89ca9..6fb5b79 100644
 --- a/package.json
 +++ b/package.json
-@@ -398,7 +398,7 @@
+@@ -419,7 +419,7 @@
          "StartupWMClass": "Signal"
        },
        "target": [
 -        "deb"
 +        "rpm"
        ],
-       "icon": "build/icons/png"
-     },
+       "icon": "build/icons/png",
+       "publish": []
