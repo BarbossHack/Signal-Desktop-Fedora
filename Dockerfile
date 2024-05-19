@@ -8,7 +8,7 @@ ENV ARCH ${ARCH}
 # Install build requirements
 RUN dnf update -y && \
     dnf install -y unzip g++ npm python make gcc git rpm-build libxcrypt-compat patch && \
-    if [[ "${ARCH}" == "arm64v8" ]]; then dnf install -y ruby && gem install fpm; fi && \
+    if [[ "${ARCH}" == "arm64v8" ]]; then dnf install -y ruby-devel && gem install fpm; fi && \
 # Install git-lfs
     curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
     dnf install -y git-lfs && \
