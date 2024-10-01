@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 2654b2548..3b559fd8f 100644
+index 2135d5f..12e9a43 100644
 --- a/package.json
 +++ b/package.json
-@@ -438,7 +438,7 @@
+@@ -454,7 +454,7 @@
          "StartupWMClass": "Signal"
        },
        "target": [
@@ -12,10 +12,10 @@ index 2654b2548..3b559fd8f 100644
        "icon": "build/icons/png",
        "publish": []
 diff --git a/ts/background.ts b/ts/background.ts
-index 06371538c..991970aea 100644
+index cdc9091..6162d52 100644
 --- a/ts/background.ts
 +++ b/ts/background.ts
-@@ -301,17 +301,7 @@ export async function startApp(): Promise<void> {
+@@ -289,17 +289,7 @@ export async function startApp(): Promise<void> {
      wait: 500,
      maxSize: 100,
      processBatch: async deliveryReceipts => {
@@ -35,10 +35,10 @@ index 06371538c..991970aea 100644
    });
  
 diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index d573cf952..21c8282ea 100644
+index ae47cec..8856c64 100644
 --- a/ts/components/conversation/Message.tsx
 +++ b/ts/components/conversation/Message.tsx
-@@ -2782,7 +2782,8 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -2849,7 +2849,8 @@ export class Message extends React.PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
@@ -48,7 +48,7 @@ index d573cf952..21c8282ea 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -2875,7 +2876,7 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -2942,7 +2943,7 @@ export class Message extends React.PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
@@ -58,10 +58,10 @@ index d573cf952..21c8282ea 100644
            data-testid={timestamp}
            tabIndex={0}
 diff --git a/ts/models/messages.ts b/ts/models/messages.ts
-index 26a0bb1a6..83bed9e51 100644
+index 7dbfb4c..f0f2630 100644
 --- a/ts/models/messages.ts
 +++ b/ts/models/messages.ts
-@@ -2735,6 +2735,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
+@@ -2551,6 +2551,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
      >,
      shouldPersist = true
    ): Promise<void> {
@@ -87,10 +87,10 @@ index 26a0bb1a6..83bed9e51 100644
        return;
      }
 diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
-index dcb943041..0c04a320c 100644
+index f868705..96abe64 100644
 --- a/ts/services/expiringMessagesDeletion.ts
 +++ b/ts/services/expiringMessagesDeletion.ts
-@@ -20,6 +20,8 @@ class ExpiringMessagesDeletionService {
+@@ -24,6 +24,8 @@ class ExpiringMessagesDeletionService {
    }
  
    private async destroyExpiredMessages() {
@@ -99,7 +99,7 @@ index dcb943041..0c04a320c 100644
      try {
        window.SignalContext.log.info(
          'destroyExpiredMessages: Loading messages...'
-@@ -73,6 +75,8 @@ class ExpiringMessagesDeletionService {
+@@ -79,6 +81,8 @@ class ExpiringMessagesDeletionService {
    }
  
    private async checkExpiringMessages() {
@@ -109,7 +109,7 @@ index dcb943041..0c04a320c 100644
        'checkExpiringMessages: checking for expiring messages'
      );
 diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
-index 7a03d447f..3b25b6208 100644
+index 7a03d44..3b25b62 100644
 --- a/ts/util/sendReceipts.ts
 +++ b/ts/util/sendReceipts.ts
 @@ -55,6 +55,9 @@ export async function sendReceipts({

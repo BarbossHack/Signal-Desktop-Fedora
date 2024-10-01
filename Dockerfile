@@ -2,27 +2,26 @@ ARG ARCH
 ARG FEDORA_VERSION
 FROM docker.io/${ARCH}/fedora:${FEDORA_VERSION}
 
+# Install build requirements
 ARG ARCH
 ENV ARCH ${ARCH}
+RUN dnf update -y \
+    && dnf install -y g++ npm python make gcc git rpm-build libxcrypt-compat patch \
+    && if [[ "${ARCH}" == "arm64v8" ]]; then dnf install -y ruby-devel && gem install fpm; fi \
+    && dnf clean all
 
-# Install build requirements
-RUN dnf update -y && \
-    dnf install -y unzip g++ npm python make gcc git rpm-build libxcrypt-compat patch && \
-    if [[ "${ARCH}" == "arm64v8" ]]; then dnf install -y ruby-devel && gem install fpm; fi && \
-# Install git-lfs
-    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash && \
-    dnf install -y git-lfs && \
-    git lfs install && \
-# Fix node-gyp distutils not found
-    dnf install -y python3-pip && \
-    pip install packaging && \
-# Clean
-    dnf clean all
-
-# Install yarn and nvm
-ENV NVM_DIR /root/.nvm
-RUN npm install --global yarn && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+# Install nvm
+ARG NODE_VERSION
+ENV NVM_VERSION=0.40.1
+ENV NVM_DIR=/usr/local/nvm
+RUN mkdir $NVM_DIR
+RUN curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh" | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias $NODE_VERSION \
+    && nvm use $NODE_VERSION
+ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # Add patch file
 ARG PATCH_FILE
@@ -31,6 +30,10 @@ COPY ${PATCH_FILE} /root/Signal-Desktop.patch
 # Add entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENV SIGNAL_ENV=production
+ARG SIGNAL_VERSION
+ENV SIGNAL_VERSION ${SIGNAL_VERSION}
 
 WORKDIR /root
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

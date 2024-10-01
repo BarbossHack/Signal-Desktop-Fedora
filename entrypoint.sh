@@ -1,11 +1,6 @@
 #!/bin/bash
 
-set -e
-set -u
-
-# Install nvm version used by Signal-Desktop
-source /root/.nvm/nvm.sh --no-use
-nvm install $(curl -o- https://raw.githubusercontent.com/signalapp/Signal-Desktop/v${SIGNAL_VERSION}/.nvmrc)
+set -eu
 
 # Clone and patch Signal-Desktop
 cd /root
@@ -14,11 +9,16 @@ cd Signal-Desktop
 patch -p1 </root/Signal-Desktop.patch
 
 # Build Signal-Desktop
-nvm use
 if [[ "${ARCH}" == "arm64v8" ]]; then export USE_SYSTEM_FPM=true; fi
-yarn install --frozen-lockfile || yarn install --frozen-lockfile
-yarn generate
-yarn build-release
+npm install
+npm run clean-transpile
+cd sticker-creator
+npm install
+npm run build
+cd ..
+npm run generate
+npm run prepare-beta-build
+npm run build-linux
 
 # Export rpm
 mkdir -p /output

@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 890d5e85d..2db7cf7c5 100644
+index 2135d5f..12e9a43 100644
 --- a/package.json
 +++ b/package.json
-@@ -449,7 +449,7 @@
+@@ -454,7 +454,7 @@
          "StartupWMClass": "Signal"
        },
        "target": [
@@ -12,19 +12,19 @@ index 890d5e85d..2db7cf7c5 100644
        "icon": "build/icons/png",
        "publish": []
 diff --git a/ts/util/getQuoteBodyText.ts b/ts/util/getQuoteBodyText.ts
-index e262feafc..03a1951cb 100644
+index 7b9db2a..5623a95 100644
 --- a/ts/util/getQuoteBodyText.ts
 +++ b/ts/util/getQuoteBodyText.ts
 @@ -2,27 +2,10 @@
  // SPDX-License-Identifier: AGPL-3.0-only
  
- import type { MessageAttributesType } from '../model-types.d';
+ import type { ReadonlyMessageAttributesType } from '../model-types.d';
 -import * as EmbeddedContact from '../types/EmbeddedContact';
  
  export function getQuoteBodyText(
--  messageAttributes: MessageAttributesType,
+-  messageAttributes: ReadonlyMessageAttributesType,
 -  id: number
-+  _messageAttributes: MessageAttributesType,
++  _messageAttributes: ReadonlyMessageAttributesType,
 +  _id: number
  ): string | undefined {
 -  const storyReactionEmoji = messageAttributes.storyReaction?.emoji;
@@ -47,10 +47,10 @@ index e262feafc..03a1951cb 100644
 +  return "Altered quote message !";
  }
 diff --git a/ts/util/makeQuote.ts b/ts/util/makeQuote.ts
-index 61ab57314..1a27dda88 100644
+index f25733b..f948a33 100644
 --- a/ts/util/makeQuote.ts
 +++ b/ts/util/makeQuote.ts
-@@ -35,7 +35,7 @@ export async function makeQuote(
+@@ -36,7 +36,7 @@ export async function makeQuote(
      sticker,
    } = quotedMessage;
  
@@ -59,7 +59,7 @@ index 61ab57314..1a27dda88 100644
  
    return {
      authorAci: contact.getCheckedAci('makeQuote'),
-@@ -48,7 +48,7 @@ export async function makeQuote(
+@@ -49,7 +49,7 @@ export async function makeQuote(
      isViewOnce: isTapToView(quotedMessage),
      isGiftBadge: isGiftBadge(quotedMessage),
      messageId,
