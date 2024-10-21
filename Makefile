@@ -1,4 +1,4 @@
-.PHONY=build install clean
+.PHONY=build install clean update
 
 SIGNAL_VERSION=$$(cat ./SIGNAL_VERSION | head -n 1 | tr -d vV)
 FEDORA_VERSION=$$(cat ./FEDORA_VERSION | head -n 1)
@@ -10,8 +10,8 @@ all: build
 
 build: clean
 	@mkdir -p output
-	@podman build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) --build-arg=SIGNAL_VERSION=$(SIGNAL_VERSION) -t signal-desktop-rpm:latest .
-	@podman run -it --rm -v $$PWD/output:/output:Z signal-desktop-rpm:latest
+	@podman build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
+	@podman run -it --rm -e SIGNAL_VERSION=$(SIGNAL_VERSION) -v $$PWD/output:/output:Z signal-desktop-rpm:latest
 
 install:
 	@-pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null && sleep 2
@@ -22,3 +22,7 @@ install:
 clean:
 	@podman unshare rm -rf ./output
 	@-podman rm -f signal-desktop-rpm 2>/dev/null
+
+update:
+	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-alpha' | grep -v '\-beta' | grep -v '\^{}' | sort -V | tail -n 1) && echo "SIGNAL_VERSION: $$SIGNAL_VERSION" && echo -n $$SIGNAL_VERSION > SIGNAL_VERSION && sed -i "s/^- Signal-Desktop v.*/- Signal-Desktop $$SIGNAL_VERSION/g" README.md
+	@FEDORA_VERSION=$$(if [ -f /etc/os-release ]; then . /etc/os-release && [ "$$ID" = "fedora" ] && echo "$$VERSION_ID"; else echo ""; fi) && echo "FEDORA_VERSION: $$FEDORA_VERSION" && echo -n $$FEDORA_VERSION > FEDORA_VERSION && sed -i "s/^- Fedora .*/- Fedora $$FEDORA_VERSION/g" README.md

@@ -32,8 +32,6 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENV SIGNAL_ENV=production
-ARG SIGNAL_VERSION
-ENV SIGNAL_VERSION ${SIGNAL_VERSION}
 
 WORKDIR /root
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
