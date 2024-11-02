@@ -5,7 +5,7 @@ A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Deskt
 Currently tested for :
 
 - Fedora 40
-- Signal-Desktop v7.29.0
+- Signal-Desktop v7.31.0
 - x86_64 and aarch64 architectures
 
 ## Requirements
@@ -34,7 +34,7 @@ make install
 
 ## Signal version
 
-I will try to keep this script up to date, but you can set the Signal-Desktop version in the `SIGNAL_VERSION` file.
+You can set the Signal-Desktop version in the `SIGNAL_VERSION` file (e.g. by running `make update`).
 
 It should be a valid `tag` from <https://github.com/signalapp/Signal-Desktop/tags>
 

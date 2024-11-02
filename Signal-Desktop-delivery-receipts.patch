@@ -1,0 +1,50 @@
+diff --git a/package.json b/package.json
+index e2b8606..bbd3656 100644
+--- a/package.json
++++ b/package.json
+@@ -455,7 +455,7 @@
+         "StartupWMClass": "Signal"
+       },
+       "target": [
+-        "deb"
++        "rpm"
+       ],
+       "icon": "build/icons/png",
+       "publish": []
+diff --git a/ts/background.ts b/ts/background.ts
+index 4193c9e..6ca9a15 100644
+--- a/ts/background.ts
++++ b/ts/background.ts
+@@ -291,17 +291,7 @@ export async function startApp(): Promise<void> {
+     wait: 500,
+     maxSize: 100,
+     processBatch: async deliveryReceipts => {
+-      const groups = groupBy(deliveryReceipts, 'conversationId');
+-      await Promise.all(
+-        Object.keys(groups).map(async conversationId => {
+-          await conversationJobQueue.add({
+-            type: conversationQueueJobEnum.enum.Receipts,
+-            conversationId,
+-            receiptsType: ReceiptType.Delivery,
+-            receipts: groups[conversationId],
+-          });
+-        })
+-      );
++      log.info('Skipping delivery receipt:', deliveryReceipts);
+     },
+   });
+ 
+diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
+index e2fbbc7..474d82b 100644
+--- a/ts/util/sendReceipts.ts
++++ b/ts/util/sendReceipts.ts
+@@ -56,6 +56,9 @@ export async function sendReceipts({
+     return;
+   }
+ 
++  // do not send read-receipts
++  return;
++
+   log.info(`Starting receipt send of type ${type}`);
+ 
+   type ConversationSenderReceiptGroup = {
