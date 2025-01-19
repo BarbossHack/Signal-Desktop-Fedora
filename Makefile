@@ -24,5 +24,5 @@ clean:
 	@-podman rm -f signal-desktop-rpm 2>/dev/null
 
 update:
-	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-alpha' | grep -v '\-beta' | grep -v '\^{}' | sort -V | tail -n 1) && echo "SIGNAL_VERSION: $$SIGNAL_VERSION" && echo -n $$SIGNAL_VERSION > SIGNAL_VERSION && sed -i "s/^- Signal-Desktop v.*/- Signal-Desktop $$SIGNAL_VERSION/g" README.md
+	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-[a-z]' | grep -v '\^{}' | sort -V | tail -n 1) && echo "SIGNAL_VERSION: $$SIGNAL_VERSION" && echo -n $$SIGNAL_VERSION > SIGNAL_VERSION && sed -i "s/^- Signal-Desktop v.*/- Signal-Desktop $$SIGNAL_VERSION/g" README.md
 	@FEDORA_VERSION=$$(if [ -f /etc/os-release ]; then . /etc/os-release && [ "$$ID" = "fedora" ] && echo "$$VERSION_ID"; else echo ""; fi) && echo "FEDORA_VERSION: $$FEDORA_VERSION" && echo -n $$FEDORA_VERSION > FEDORA_VERSION && sed -i "s/^- Fedora .*/- Fedora $$FEDORA_VERSION/g" README.md
