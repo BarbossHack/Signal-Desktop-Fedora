@@ -1,10 +1,10 @@
 diff --git a/package.json b/package.json
-index e2b8606..bbd3656 100644
+index 0dd812f5d..96d66398f 100644
 --- a/package.json
 +++ b/package.json
-@@ -455,7 +455,7 @@
-         "StartupWMClass": "Signal"
-       },
+@@ -448,7 +448,7 @@
+     "linux": {
+       "category": "Network;InstantMessaging;Chat",
        "target": [
 -        "deb"
 +        "rpm"

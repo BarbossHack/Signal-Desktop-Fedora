@@ -4,8 +4,8 @@ A Dockerfile to build [Signal-Desktop](https://github.com/signalapp/Signal-Deskt
 
 Currently tested for :
 
-- Fedora 40
-- Signal-Desktop v7.38.0
+- Fedora 41
+- Signal-Desktop v7.40.0
 - x86_64 and aarch64 architectures
 
 ## Requirements

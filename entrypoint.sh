@@ -11,7 +11,7 @@ cd Signal-Desktop
 patch -p1 </root/Signal-Desktop.patch
 
 # Build Signal-Desktop
-if [[ "${ARCH}" == "arm64v8" ]]; then export USE_SYSTEM_FPM=true; fi
+export USE_SYSTEM_FPM=true
 npm install
 npm run clean-transpile
 cd sticker-creator

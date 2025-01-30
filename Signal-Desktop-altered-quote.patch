@@ -1,10 +1,10 @@
 diff --git a/package.json b/package.json
-index e2b8606..bbd3656 100644
+index 0dd812f5d..96d66398f 100644
 --- a/package.json
 +++ b/package.json
-@@ -455,7 +455,7 @@
-         "StartupWMClass": "Signal"
-       },
+@@ -448,7 +448,7 @@
+     "linux": {
+       "category": "Network;InstantMessaging;Chat",
        "target": [
 -        "deb"
 +        "rpm"
@@ -12,10 +12,10 @@ index e2b8606..bbd3656 100644
        "icon": "build/icons/png",
        "publish": []
 diff --git a/ts/util/getQuoteBodyText.ts b/ts/util/getQuoteBodyText.ts
-index 7b9db2a..5623a95 100644
+index 6407bf697..e97e8b396 100644
 --- a/ts/util/getQuoteBodyText.ts
 +++ b/ts/util/getQuoteBodyText.ts
-@@ -2,27 +2,10 @@
+@@ -2,29 +2,10 @@
  // SPDX-License-Identifier: AGPL-3.0-only
  
  import type { ReadonlyMessageAttributesType } from '../model-types.d';
@@ -23,18 +23,20 @@ index 7b9db2a..5623a95 100644
  
  export function getQuoteBodyText(
 -  messageAttributes: ReadonlyMessageAttributesType,
--  id: number
+-  id: number | null
 +  _messageAttributes: ReadonlyMessageAttributesType,
-+  _id: number
++  _id: number | null
  ): string | undefined {
 -  const storyReactionEmoji = messageAttributes.storyReaction?.emoji;
 -
--  const { editHistory } = messageAttributes;
--  const editedMessage =
--    editHistory && editHistory.find(edit => edit.timestamp === id);
+-  if (id != null) {
+-    const { editHistory } = messageAttributes;
+-    const editedMessage =
+-      editHistory && editHistory.find(edit => edit.timestamp === id);
 -
--  if (editedMessage && editedMessage.body) {
--    return editedMessage.body;
+-    if (editedMessage && editedMessage.body) {
+-      return editedMessage.body;
+-    }
 -  }
 -
 -  const { body, contact: embeddedContact } = messageAttributes;
@@ -47,7 +49,7 @@ index 7b9db2a..5623a95 100644
 +  return "Altered quote message !";
  }
 diff --git a/ts/util/makeQuote.ts b/ts/util/makeQuote.ts
-index f25733b..f948a33 100644
+index 3fc21667a..3823b4570 100644
 --- a/ts/util/makeQuote.ts
 +++ b/ts/util/makeQuote.ts
 @@ -36,7 +36,7 @@ export async function makeQuote(

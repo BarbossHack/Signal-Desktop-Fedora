@@ -1,10 +1,10 @@
 diff --git a/package.json b/package.json
-index e2b8606..bbd3656 100644
+index 0dd812f5d..96d66398f 100644
 --- a/package.json
 +++ b/package.json
-@@ -455,7 +455,7 @@
-         "StartupWMClass": "Signal"
-       },
+@@ -448,7 +448,7 @@
+     "linux": {
+       "category": "Network;InstantMessaging;Chat",
        "target": [
 -        "deb"
 +        "rpm"
@@ -12,10 +12,10 @@ index e2b8606..bbd3656 100644
        "icon": "build/icons/png",
        "publish": []
 diff --git a/ts/background.ts b/ts/background.ts
-index cdc9091..6162d52 100644
+index 0655366b2..14b8e849d 100644
 --- a/ts/background.ts
 +++ b/ts/background.ts
-@@ -289,17 +289,7 @@ export async function startApp(): Promise<void> {
+@@ -299,17 +299,7 @@ export async function startApp(): Promise<void> {
      wait: 500,
      maxSize: 100,
      processBatch: async deliveryReceipts => {
@@ -35,10 +35,10 @@ index cdc9091..6162d52 100644
    });
  
 diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index ae47cec..8856c64 100644
+index ed1ac704e..87976b39c 100644
 --- a/ts/components/conversation/Message.tsx
 +++ b/ts/components/conversation/Message.tsx
-@@ -2849,7 +2849,8 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -2933,7 +2933,8 @@ export class Message extends React.PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
@@ -48,7 +48,7 @@ index ae47cec..8856c64 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -2942,7 +2943,7 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3026,7 +3027,7 @@ export class Message extends React.PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
@@ -57,62 +57,73 @@ index ae47cec..8856c64 100644
            )}
            data-testid={timestamp}
            tabIndex={0}
-diff --git a/ts/models/messages.ts b/ts/models/messages.ts
-index 7dbfb4c..f0f2630 100644
---- a/ts/models/messages.ts
-+++ b/ts/models/messages.ts
-@@ -2551,6 +2551,24 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
-     >,
-     shouldPersist = true
-   ): Promise<void> {
-+
-+    // Add a marker to tell message has been deleted
-+    this.set({
-+      body: `❌ Deleted ❌ ${this.get('body')}`,
-+    });
-+
-+    // Save the modifyed message to DB
-+    if (shouldPersist) {
-+      await window.Signal.Data.saveMessage(this.attributes, {
-+        ourUuid: window.textsecure.storage.user.getCheckedUuid().toString(),
-+      });
-+    }
-+    // Update last message on conv
-+    this.getConversation()?.updateLastMessage();
-+
-+    // Return function before doing something else (delete content, etc.)
-+    return;
-+
-     if (this.deletingForEveryone || this.get('deletedForEveryone')) {
-       return;
-     }
 diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
-index f868705..96abe64 100644
+index ff805e796..3cc0c3d45 100644
 --- a/ts/services/expiringMessagesDeletion.ts
 +++ b/ts/services/expiringMessagesDeletion.ts
-@@ -24,6 +24,8 @@ class ExpiringMessagesDeletionService {
+@@ -23,6 +23,8 @@ class ExpiringMessagesDeletionService {
    }
  
-   private async destroyExpiredMessages() {
+   async #destroyExpiredMessages() {
 +    // Avoid deleting expired messages from DB
 +    return;
      try {
        window.SignalContext.log.info(
          'destroyExpiredMessages: Loading messages...'
-@@ -79,6 +81,8 @@ class ExpiringMessagesDeletionService {
+@@ -75,6 +77,8 @@ class ExpiringMessagesDeletionService {
    }
  
-   private async checkExpiringMessages() {
+   async #checkExpiringMessages() {
 +    // Avoid deleting expired messages from DB
 +    return;
      window.SignalContext.log.info(
        'checkExpiringMessages: checking for expiring messages'
      );
+diff --git a/ts/util/deleteForEveryone.ts b/ts/util/deleteForEveryone.ts
+index 7bc5aa961..236d1b902 100644
+--- a/ts/util/deleteForEveryone.ts
++++ b/ts/util/deleteForEveryone.ts
+@@ -11,6 +11,8 @@ import { isTooOldToModifyMessage } from './isTooOldToModifyMessage';
+ import { drop } from './drop';
+ import { eraseMessageContents } from './cleanup';
+ import { notificationService } from '../services/notifications';
++import { DataWriter } from '../sql/Client';
++import { postSaveUpdates } from '../util/cleanup';
+ 
+ export async function deleteForEveryone(
+   message: MessageModel,
+@@ -72,6 +74,26 @@ export async function handleDeleteForEveryone(
+   >,
+   shouldPersist = true
+ ): Promise<void> {
++  // Add a marker to tell message has been deleted
++  message.set({
++    body: `❌ Deleted ❌ ${message.get('body')}`,
++  });
++  // Save the modifyed message to DB
++  if (shouldPersist) {
++    await DataWriter.saveMessage(message.attributes, {
++      ourAci: window.textsecure.storage.user.getCheckedAci(),
++      postSaveUpdates,
++    });
++  }
++  // Update last message on conv
++  drop(
++    window.ConversationController.get(
++      message.attributes.conversationId
++    )?.updateLastMessage()
++  );
++  // Return function before doing something else (delete content, etc.)
++  return;
++
+   if (message.deletingForEveryone || message.get('deletedForEveryone')) {
+     return;
+   }
 diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
-index 7a03d44..3b25b62 100644
+index bcfcc00ba..72916dfed 100644
 --- a/ts/util/sendReceipts.ts
 +++ b/ts/util/sendReceipts.ts
-@@ -55,6 +55,9 @@ export async function sendReceipts({
+@@ -57,6 +57,9 @@ export async function sendReceipts({
      return;
    }
  
@@ -121,4 +132,4 @@ index 7a03d44..3b25b62 100644
 +
    log.info(`Starting receipt send of type ${type}`);
  
-   const receiptsBySenderId: Map<string, Array<Receipt>> = receipts.reduce(
+   type ConversationSenderReceiptGroup = {

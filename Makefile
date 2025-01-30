@@ -14,14 +14,14 @@ build: clean
 	@podman run -it --rm -e SIGNAL_VERSION=$(SIGNAL_VERSION) -v $$PWD/output:/output:Z signal-desktop-rpm:latest
 
 install:
-	@-pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null && sleep 2
-	@-pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null
+	@pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null || true && sleep 2
+	@pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null || true
 	@sudo rpm -Uvh --force output/signal-desktop-$(SIGNAL_VERSION).$$(uname -m).rpm
 	@sudo sed -i 's|Exec=/opt/Signal/signal-desktop.*|Exec=/opt/Signal/signal-desktop --use-tray-icon %U|g' /usr/share/applications/signal-desktop.desktop
 
 clean:
 	@podman unshare rm -rf ./output
-	@-podman rm -f signal-desktop-rpm 2>/dev/null
+	@podman rm -f -t 0 signal-desktop-rpm 2>/dev/null || true
 
 update:
 	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-[a-z]' | grep -v '\^{}' | sort -V | tail -n 1) && echo "SIGNAL_VERSION: $$SIGNAL_VERSION" && echo -n $$SIGNAL_VERSION > SIGNAL_VERSION && sed -i "s/^- Signal-Desktop v.*/- Signal-Desktop $$SIGNAL_VERSION/g" README.md

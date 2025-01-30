@@ -3,11 +3,9 @@ ARG FEDORA_VERSION
 FROM docker.io/${ARCH}/fedora:${FEDORA_VERSION}
 
 # Install build requirements
-ARG ARCH
-ENV ARCH ${ARCH}
 RUN dnf update -y \
     && dnf install -y g++ npm python make gcc git rpm-build libxcrypt-compat patch \
-    && if [[ "${ARCH}" == "arm64v8" ]]; then dnf install -y ruby-devel && gem install fpm; fi \
+    && dnf install -y ruby-devel && gem install fpm \
     && dnf clean all
 
 # Install nvm
