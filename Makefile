@@ -10,7 +10,7 @@ all: build
 
 build: clean
 	@mkdir -p output
-	@podman build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
+	@podman build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
 	@podman run -it --rm -e SIGNAL_VERSION=$(SIGNAL_VERSION) -v $$PWD/output:/output:Z signal-desktop-rpm:latest
 
 install:

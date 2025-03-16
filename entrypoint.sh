@@ -12,15 +12,15 @@ patch -p1 </root/Signal-Desktop.patch
 
 # Build Signal-Desktop
 export USE_SYSTEM_FPM=true
-npm install
-npm run clean-transpile
+pnpm install --frozen-lockfile
+pnpm run clean-transpile
 cd sticker-creator
-npm install
-npm run build
+pnpm install --frozen-lockfile
+pnpm run build
 cd ..
-npm run generate
-npm run prepare-beta-build
-npm run build-linux
+pnpm run generate
+pnpm run prepare-beta-build
+pnpm run build-linux
 
 # Export rpm
 mkdir -p /output
