@@ -1,0 +1,86 @@
+name: build
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+  attestations: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  ARCH: amd64
+  PATCH_FILE: Signal-Desktop.patch
+
+jobs:
+  dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          export SIGNAL_VERSION=$(cat ./SIGNAL_VERSION | head -n 1 | tr -d vV)
+          echo "SIGNAL_VERSION=$SIGNAL_VERSION" >> $GITHUB_ENV
+          echo "FEDORA_VERSION=$(cat ./FEDORA_VERSION | head -n 1)" >> $GITHUB_ENV
+          echo "NODE_VERSION=$(curl -s https://raw.githubusercontent.com/signalapp/Signal-Desktop/refs/tags/v$SIGNAL_VERSION/.nvmrc)" >> $GITHUB_ENV
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: type=raw,value=latest
+      - uses: docker/build-push-action@v5
+        id: build-and-push
+        with:
+          file: Dockerfile
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            ARCH=${{ env.ARCH }}
+            FEDORA_VERSION=${{ env.FEDORA_VERSION }}
+            SIGNAL_VERSION=${{ env.SIGNAL_VERSION }}
+            PATCH_FILE=patch/${{ env.PATCH_FILE }}
+            NODE_VERSION=${{ env.NODE_VERSION }}
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  signal-desktop:
+    needs: dockerfile
+    if: needs.dockerfile.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "SIGNAL_VERSION=$(cat ./SIGNAL_VERSION | head -n 1 | tr -d vV)" >> $GITHUB_ENV
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: type=raw,value=latest
+      - run: |
+          mkdir -p ./output/
+          docker run --rm -e SIGNAL_VERSION=${{ env.SIGNAL_VERSION }} -v ./output:/output:Z ${{ steps.meta.outputs.tags }}
+          mv ./output/*.rpm .
+      - run: sha256sum *.rpm > subject.checksums.txt
+      - uses: actions/attest@v2
+        with:
+          subject-checksums: subject.checksums.txt
+          predicate-type: "https://example.com/predicate/v1"
+          predicate: "{}"
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file ".github/release-notes.md"
+      - name: Upload artifact to GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" *.rpm --repo "$GITHUB_REPOSITORY"
