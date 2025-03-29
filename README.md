@@ -48,13 +48,13 @@ make PATCH_FILE=Signal-Desktop-persistent-messages.patch
 make install
 ```
 
-## Signal version
+### Signal version
 
 You can set the Signal-Desktop version in the `SIGNAL_VERSION` file (e.g., by running `make update`).
 
 It should correspond to a valid tag from [here](https://github.com/signalapp/Signal-Desktop/tags).
 
-## Fedora version
+### Fedora version
 
 You can modify the version in the `FEDORA_VERSION` file.
 
