@@ -5,7 +5,7 @@
 Currently tested for :
 
 - Fedora 41
-- Signal-Desktop v7.52.0
+- Signal-Desktop v7.53.0
 - x86_64 and aarch64 architectures
 
 ## How to install
