@@ -10,16 +10,16 @@ Currently tested for :
 
 ## How to install
 
-Download the latest pre-compiled RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) and install it using the following command:
+Install the latest pre-compiled RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) using the following command:
 
 ```bash
-sudo rpm -Uvh --force signal-desktop-*.rpm
+sudo dnf install https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.53.0/signal-desktop-7.53.0.x86_64.rpm
 ```
 
-These RPMs have been built using [GitHub Actions](.github/workflows/build.yml). You can verify their authenticity with the following command:
+This RPM has been built using [GitHub Actions](.github/workflows/build.yml). You can verify its authenticity with the following command:
 
 ```bash
-gh attestation verify --owner BarbossHack --predicate-type "https://example.com/predicate/v1" signal-desktop-*.rpm
+gh attestation verify --owner BarbossHack --predicate-type "https://example.com/predicate/v1" signal-desktop-7.53.0.x86_64.rpm
 ```
 
 ## Build it yourself
@@ -27,7 +27,7 @@ gh attestation verify --owner BarbossHack --predicate-type "https://example.com/
 ### Requirements
 
 ```bash
-sudo dnf install -y podman make
+sudo dnf install podman make
 ```
 
 ### Build and install
