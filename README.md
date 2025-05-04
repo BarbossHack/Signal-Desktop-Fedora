@@ -10,7 +10,7 @@ Currently tested for :
 
 ## How to install
 
-Install the latest pre-compiled RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) using the following command:
+Install the latest prebuilt RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) using the following command:
 
 ```bash
 sudo dnf install https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.53.0/signal-desktop-7.53.0.x86_64.rpm
