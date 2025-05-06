@@ -4,7 +4,7 @@
 
 Currently tested for :
 
-- Fedora 41
+- Fedora 42
 - Signal-Desktop v7.53.0
 - x86_64 and aarch64 architectures
 
