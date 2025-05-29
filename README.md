@@ -5,7 +5,7 @@
 Currently tested for :
 
 - Fedora 42
-- Signal-Desktop v7.53.0
+- Signal-Desktop v7.56.0
 - x86_64 and aarch64 architectures
 
 ## How to install
@@ -13,13 +13,13 @@ Currently tested for :
 Install the latest prebuilt RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) using the following command:
 
 ```bash
-sudo dnf install https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.53.0/signal-desktop-7.53.0.x86_64.rpm
+sudo dnf install https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.56.0/signal-desktop-7.56.0.x86_64.rpm
 ```
 
 This RPM has been built using [GitHub Actions](.github/workflows/build.yml). You can verify its authenticity with the following command:
 
 ```bash
-gh attestation verify --owner BarbossHack --predicate-type "https://example.com/predicate/v1" signal-desktop-7.53.0.x86_64.rpm
+gh attestation verify --owner BarbossHack --predicate-type "https://example.com/predicate/v1" signal-desktop-7.56.0.x86_64.rpm
 ```
 
 ## Build it yourself
