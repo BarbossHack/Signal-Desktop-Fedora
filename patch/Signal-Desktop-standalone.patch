@@ -1,0 +1,42 @@
+diff --git a/app/menu.ts b/app/menu.ts
+index c67d4c6..d54ae15 100644
+--- a/app/menu.ts
++++ b/app/menu.ts
+@@ -233,12 +233,10 @@ export const createTemplate = (
+         });
+       }
+ 
+-      if (options.development) {
+         fileMenu.submenu.unshift({
+           label: i18n('icu:menuSetupAsStandalone'),
+           click: setupAsStandalone,
+         });
+-      }
+ 
+       fileMenu.submenu.unshift({
+         type: 'separator',
+diff --git a/package.json b/package.json
+index 9ff26de..3e79e6f 100644
+--- a/package.json
++++ b/package.json
+@@ -492,7 +492,7 @@
+     "linux": {
+       "category": "Network;InstantMessaging;Chat",
+       "target": [
+-        "deb"
++        "rpm"
+       ],
+       "icon": "build/icons/png",
+       "publish": []
+diff --git a/ts/state/ducks/app.ts b/ts/state/ducks/app.ts
+index 7d9290e..33efda3 100644
+--- a/ts/state/ducks/app.ts
++++ b/ts/state/ducks/app.ts
+@@ -92,7 +92,6 @@ function openStandalone(): ThunkAction<
+ > {
+   return dispatch => {
+     if (getEnvironment() === Environment.PackagedApp) {
+-      return;
+     }
+ 
+     window.IPC.addSetupMenuItems();

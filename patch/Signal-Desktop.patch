@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 0dd812f5d..96d66398f 100644
+index 9ff26de..3e79e6f 100644
 --- a/package.json
 +++ b/package.json
-@@ -448,7 +448,7 @@
+@@ -492,7 +492,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [

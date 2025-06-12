@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 0dd812f5d..96d66398f 100644
+index 9ff26de..3e79e6f 100644
 --- a/package.json
 +++ b/package.json
-@@ -448,7 +448,7 @@
+@@ -492,7 +492,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [
@@ -12,10 +12,10 @@ index 0dd812f5d..96d66398f 100644
        "icon": "build/icons/png",
        "publish": []
 diff --git a/ts/background.ts b/ts/background.ts
-index 0655366b2..14b8e849d 100644
+index 750a73d..5a8426a 100644
 --- a/ts/background.ts
 +++ b/ts/background.ts
-@@ -299,17 +299,7 @@ export async function startApp(): Promise<void> {
+@@ -311,17 +311,7 @@ export async function startApp(): Promise<void> {
      wait: 500,
      maxSize: 100,
      processBatch: async deliveryReceipts => {
@@ -35,30 +35,28 @@ index 0655366b2..14b8e849d 100644
    });
  
 diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index ed1ac704e..87976b39c 100644
+index 35db747..2c0e0bd 100644
 --- a/ts/components/conversation/Message.tsx
 +++ b/ts/components/conversation/Message.tsx
-@@ -2933,7 +2933,8 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3383,7 +3383,7 @@ export class Message extends React.PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
 -      return null;
 +      // Avoid deleting expired messages from UX
-+      //return null;
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -3026,7 +3027,7 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3477,7 +3477,6 @@ export class Message extends React.PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
 -            expiring ? 'module-message--expired' : null
-+            //expiring ? 'module-message--expired' : null
            )}
            data-testid={timestamp}
            tabIndex={0}
 diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
-index ff805e796..3cc0c3d45 100644
+index ba5882b..867912c 100644
 --- a/ts/services/expiringMessagesDeletion.ts
 +++ b/ts/services/expiringMessagesDeletion.ts
 @@ -23,6 +23,8 @@ class ExpiringMessagesDeletionService {
@@ -80,7 +78,7 @@ index ff805e796..3cc0c3d45 100644
        'checkExpiringMessages: checking for expiring messages'
      );
 diff --git a/ts/util/deleteForEveryone.ts b/ts/util/deleteForEveryone.ts
-index 7bc5aa961..236d1b902 100644
+index 7bc5aa9..236d1b9 100644
 --- a/ts/util/deleteForEveryone.ts
 +++ b/ts/util/deleteForEveryone.ts
 @@ -11,6 +11,8 @@ import { isTooOldToModifyMessage } from './isTooOldToModifyMessage';
@@ -120,7 +118,7 @@ index 7bc5aa961..236d1b902 100644
      return;
    }
 diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
-index bcfcc00ba..72916dfed 100644
+index bcfcc00..72916df 100644
 --- a/ts/util/sendReceipts.ts
 +++ b/ts/util/sendReceipts.ts
 @@ -57,6 +57,9 @@ export async function sendReceipts({
