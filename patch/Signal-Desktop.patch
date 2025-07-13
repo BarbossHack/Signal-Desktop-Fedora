@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 9ff26de..3e79e6f 100644
+index f57354b..22b2863 100644
 --- a/package.json
 +++ b/package.json
-@@ -492,7 +492,7 @@
+@@ -494,7 +494,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [
@@ -10,4 +10,4 @@ index 9ff26de..3e79e6f 100644
 +        "rpm"
        ],
        "icon": "build/icons/png",
-       "publish": []
+       "publish": [],

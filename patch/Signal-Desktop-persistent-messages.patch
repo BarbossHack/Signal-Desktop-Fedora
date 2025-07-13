@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 9ff26de..3e79e6f 100644
+index f57354b..22b2863 100644
 --- a/package.json
 +++ b/package.json
-@@ -492,7 +492,7 @@
+@@ -494,7 +494,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [
@@ -10,12 +10,12 @@ index 9ff26de..3e79e6f 100644
 +        "rpm"
        ],
        "icon": "build/icons/png",
-       "publish": []
+       "publish": [],
 diff --git a/ts/background.ts b/ts/background.ts
-index 750a73d..5a8426a 100644
+index 0ecdbc3..96964be 100644
 --- a/ts/background.ts
 +++ b/ts/background.ts
-@@ -311,17 +311,7 @@ export async function startApp(): Promise<void> {
+@@ -314,17 +314,7 @@ export async function startApp(): Promise<void> {
      wait: 500,
      maxSize: 100,
      processBatch: async deliveryReceipts => {
@@ -35,10 +35,10 @@ index 750a73d..5a8426a 100644
    });
  
 diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index 35db747..2c0e0bd 100644
+index 18e7d40..097b5dc 100644
 --- a/ts/components/conversation/Message.tsx
 +++ b/ts/components/conversation/Message.tsx
-@@ -3383,7 +3383,7 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3407,7 +3407,7 @@ export class Message extends React.PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
@@ -47,7 +47,7 @@ index 35db747..2c0e0bd 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -3477,7 +3477,6 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3501,7 +3501,6 @@ export class Message extends React.PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
@@ -56,29 +56,29 @@ index 35db747..2c0e0bd 100644
            data-testid={timestamp}
            tabIndex={0}
 diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
-index ba5882b..867912c 100644
+index dbbbbde..d10b8ba 100644
 --- a/ts/services/expiringMessagesDeletion.ts
 +++ b/ts/services/expiringMessagesDeletion.ts
-@@ -23,6 +23,8 @@ class ExpiringMessagesDeletionService {
+@@ -25,6 +25,8 @@ class ExpiringMessagesDeletionService {
    }
  
    async #destroyExpiredMessages() {
 +    // Avoid deleting expired messages from DB
 +    return;
      try {
-       window.SignalContext.log.info(
-         'destroyExpiredMessages: Loading messages...'
-@@ -75,6 +77,8 @@ class ExpiringMessagesDeletionService {
+       log.info('destroyExpiredMessages: Loading messages...');
+       const messages = await DataReader.getExpiredMessages();
+@@ -73,6 +75,8 @@ class ExpiringMessagesDeletionService {
    }
  
    async #checkExpiringMessages() {
 +    // Avoid deleting expired messages from DB
 +    return;
-     window.SignalContext.log.info(
-       'checkExpiringMessages: checking for expiring messages'
-     );
+     log.info('checkExpiringMessages: checking for expiring messages');
+ 
+     const soonestExpiry = await DataReader.getSoonestMessageExpiry();
 diff --git a/ts/util/deleteForEveryone.ts b/ts/util/deleteForEveryone.ts
-index 7bc5aa9..236d1b9 100644
+index 428c1f5..dd092e0 100644
 --- a/ts/util/deleteForEveryone.ts
 +++ b/ts/util/deleteForEveryone.ts
 @@ -11,6 +11,8 @@ import { isTooOldToModifyMessage } from './isTooOldToModifyMessage';
@@ -88,9 +88,9 @@ index 7bc5aa9..236d1b9 100644
 +import { DataWriter } from '../sql/Client';
 +import { postSaveUpdates } from '../util/cleanup';
  
- export async function deleteForEveryone(
-   message: MessageModel,
-@@ -72,6 +74,26 @@ export async function handleDeleteForEveryone(
+ const log = createLogger('deleteForEveryone');
+ 
+@@ -74,6 +76,26 @@ export async function handleDeleteForEveryone(
    >,
    shouldPersist = true
  ): Promise<void> {

@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 9ff26de..3e79e6f 100644
+index f57354b..22b2863 100644
 --- a/package.json
 +++ b/package.json
-@@ -492,7 +492,7 @@
+@@ -494,7 +494,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [
@@ -10,12 +10,12 @@ index 9ff26de..3e79e6f 100644
 +        "rpm"
        ],
        "icon": "build/icons/png",
-       "publish": []
+       "publish": [],
 diff --git a/ts/background.ts b/ts/background.ts
-index 750a73d..5a8426a 100644
+index 0ecdbc3..96964be 100644
 --- a/ts/background.ts
 +++ b/ts/background.ts
-@@ -311,17 +311,7 @@ export async function startApp(): Promise<void> {
+@@ -314,17 +314,7 @@ export async function startApp(): Promise<void> {
      wait: 500,
      maxSize: 100,
      processBatch: async deliveryReceipts => {

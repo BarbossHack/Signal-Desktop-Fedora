@@ -5,7 +5,7 @@
 Currently tested for :
 
 - Fedora 42
-- Signal Desktop v7.57.0
+- Signal Desktop v7.61.0
 - x86_64 and aarch64 architectures
 
 ## How to install
@@ -13,33 +13,30 @@ Currently tested for :
 Install the latest prebuilt RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) using the following command:
 
 ```bash
-sudo dnf install https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.57.0/signal-desktop-7.57.0.x86_64.rpm
-```
-
-This RPM has been built using [GitHub Actions](.github/workflows/build.yml). You can verify its authenticity with the following command:
-
-```bash
-gh attestation verify --owner BarbossHack --predicate-type "https://example.com/predicate/v1" signal-desktop-7.57.0.x86_64.rpm
+sudo dnf install "https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.61.0/signal-desktop-7.61.0.x86_64.rpm"
 ```
 
 ## Build it yourself
-
-### Requirements
-
-```bash
-sudo dnf install podman make
-```
-
-### Build and install
 
 ```bash
 make
 make install
 ```
 
+## Custom builds
+
+### Change versions
+
+You can change the Signal Desktop or Fedora version by using the following parameters:
+
+```bash
+make SIGNAL_VERSION=7.61.0 FEDORA_VERSION=42
+make install
+```
+
 ### Standalone primary device
 
-You can **register** a new account directly on Signal Desktop, but you have to build the `standalone` variant.
+You can create a new account directly in Signal Desktop, but you'll need to build the `standalone` version.
 
 ```bash
 make standalone
@@ -58,16 +55,6 @@ For example, you can use `Signal-Desktop-persistent-messages.patch` which will p
 make PATCH_FILE=Signal-Desktop-persistent-messages.patch
 make install
 ```
-
-### Signal version
-
-You can set the Signal Desktop version in the `SIGNAL_VERSION` file (e.g., by running `make update`).
-
-It should correspond to a valid tag from [Signal-Desktop repository](https://github.com/signalapp/Signal-Desktop/tags).
-
-### Fedora version
-
-You can modify the version in the `FEDORA_VERSION` file.
 
 ## Credits
 

@@ -6,7 +6,7 @@ echo "------ Building Signal-Desktop v${SIGNAL_VERSION} ------"
 
 # Clone and patch Signal-Desktop
 cd /root
-git clone -b v${SIGNAL_VERSION} --depth 1 https://github.com/signalapp/Signal-Desktop.git
+git clone -b "v${SIGNAL_VERSION}" --depth 1 https://github.com/signalapp/Signal-Desktop.git
 cd Signal-Desktop
 patch -p1 </root/Signal-Desktop.patch
 

@@ -16,10 +16,10 @@ index c67d4c6..d54ae15 100644
        fileMenu.submenu.unshift({
          type: 'separator',
 diff --git a/package.json b/package.json
-index 9ff26de..3e79e6f 100644
+index f57354b..22b2863 100644
 --- a/package.json
 +++ b/package.json
-@@ -492,7 +492,7 @@
+@@ -494,7 +494,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [
@@ -27,12 +27,12 @@ index 9ff26de..3e79e6f 100644
 +        "rpm"
        ],
        "icon": "build/icons/png",
-       "publish": []
+       "publish": [],
 diff --git a/ts/state/ducks/app.ts b/ts/state/ducks/app.ts
-index 7d9290e..33efda3 100644
+index f1fb6ff..ae8c99a 100644
 --- a/ts/state/ducks/app.ts
 +++ b/ts/state/ducks/app.ts
-@@ -92,7 +92,6 @@ function openStandalone(): ThunkAction<
+@@ -94,7 +94,6 @@ function openStandalone(): ThunkAction<
  > {
    return dispatch => {
      if (getEnvironment() === Environment.PackagedApp) {
