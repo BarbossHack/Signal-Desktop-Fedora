@@ -1,6 +1,6 @@
 .PHONY=build install clean update standalone
 
-SIGNAL_VERSION=v7.61.0
+SIGNAL_VERSION=v7.62.0
 FEDORA_VERSION=42
 
 PATCH_FILE="Signal-Desktop.patch"
@@ -24,7 +24,7 @@ build: requirements clean
 install:
 	@pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null || true && sleep 2
 	@pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null || true
-	@sudo dnf install -y output/signal-desktop-$(SIGNAL_VERSION).$$(uname -m).rpm
+	@sudo dnf install -y output/signal-desktop-$$(echo "$(SIGNAL_VERSION)" | tr -d vV).$$(uname -m).rpm
 	@sudo sed -i 's|Exec=/opt/Signal/signal-desktop.*|Exec=/opt/Signal/signal-desktop --use-tray-icon %U|g' /usr/share/applications/signal-desktop.desktop
 
 clean:
