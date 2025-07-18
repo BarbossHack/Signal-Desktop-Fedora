@@ -34,6 +34,8 @@ make SIGNAL_VERSION=7.61.0 FEDORA_VERSION=42
 make install
 ```
 
+`SIGNAL_VERSION` should correspond to a valid tag from [here](https://github.com/signalapp/Signal-Desktop/tags).
+
 ### Standalone primary device
 
 You can create a new account directly in Signal Desktop, but you'll need to build the `standalone` version.
