@@ -16,10 +16,10 @@ index c67d4c6..d54ae15 100644
        fileMenu.submenu.unshift({
          type: 'separator',
 diff --git a/package.json b/package.json
-index f57354b..22b2863 100644
+index 2544d5d..3131718 100644
 --- a/package.json
 +++ b/package.json
-@@ -494,7 +494,7 @@
+@@ -517,7 +517,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [

@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index f57354b..22b2863 100644
+index 2544d5d..3131718 100644
 --- a/package.json
 +++ b/package.json
-@@ -494,7 +494,7 @@
+@@ -517,7 +517,7 @@
      "linux": {
        "category": "Network;InstantMessaging;Chat",
        "target": [
@@ -11,38 +11,15 @@ index f57354b..22b2863 100644
        ],
        "icon": "build/icons/png",
        "publish": [],
-diff --git a/ts/background.ts b/ts/background.ts
-index 0ecdbc3..96964be 100644
---- a/ts/background.ts
-+++ b/ts/background.ts
-@@ -314,17 +314,7 @@ export async function startApp(): Promise<void> {
-     wait: 500,
-     maxSize: 100,
-     processBatch: async deliveryReceipts => {
--      const groups = groupBy(deliveryReceipts, 'conversationId');
--      await Promise.all(
--        Object.keys(groups).map(async conversationId => {
--          await conversationJobQueue.add({
--            type: conversationQueueJobEnum.enum.Receipts,
--            conversationId,
--            receiptsType: ReceiptType.Delivery,
--            receipts: groups[conversationId],
--          });
--        })
--      );
-+      log.info('Skipping delivery receipt:', deliveryReceipts);
-     },
-   });
- 
 diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
-index bcfcc00..72916df 100644
+index bcfcc00..937cf89 100644
 --- a/ts/util/sendReceipts.ts
 +++ b/ts/util/sendReceipts.ts
 @@ -57,6 +57,9 @@ export async function sendReceipts({
      return;
    }
  
-+  // do not send read-receipts
++  // do not send receipts
 +  return;
 +
    log.info(`Starting receipt send of type ${type}`);
