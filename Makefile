@@ -26,6 +26,7 @@ install:
 	@pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null || true
 	@sudo dnf install -y output/signal-desktop-$$(echo "$(SIGNAL_VERSION)" | tr -d vV).$$(uname -m).rpm
 	@sudo sed -i 's|Exec=/opt/Signal/signal-desktop.*|Exec=/opt/Signal/signal-desktop --use-tray-icon %U|g' /usr/share/applications/signal-desktop.desktop
+	@sudo sed -i 's|StartupWMClass=Signal|StartupWMClass=signal|g' /usr/share/applications/signal-desktop.desktop
 
 clean:
 	@podman unshare rm -rf ./output
