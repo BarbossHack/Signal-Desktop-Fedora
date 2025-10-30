@@ -1,21 +1,21 @@
 diff --git a/package.json b/package.json
-index 8f41c3a..d0bceb9 100644
+index 31399e6..1896916 100644
 --- a/package.json
 +++ b/package.json
-@@ -520,7 +520,7 @@
-     "linux": {
-       "category": "Network;InstantMessaging;Chat",
+@@ -527,7 +527,7 @@
+         }
+       },
        "target": [
 -        "deb"
 +        "rpm"
        ],
        "icon": "build/icons/png",
        "publish": [],
-diff --git a/ts/components/conversation/Message.tsx b/ts/components/conversation/Message.tsx
-index a60156b..f03a9e7 100644
---- a/ts/components/conversation/Message.tsx
-+++ b/ts/components/conversation/Message.tsx
-@@ -3355,7 +3355,7 @@ export class Message extends React.PureComponent<Props, State> {
+diff --git a/ts/components/conversation/Message.dom.tsx b/ts/components/conversation/Message.dom.tsx
+index edc0673..200c904 100644
+--- a/ts/components/conversation/Message.dom.tsx
++++ b/ts/components/conversation/Message.dom.tsx
+@@ -3295,7 +3295,7 @@ export class Message extends React.PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
@@ -24,7 +24,7 @@ index a60156b..f03a9e7 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -3449,7 +3449,6 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3389,7 +3389,6 @@ export class Message extends React.PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
@@ -32,10 +32,10 @@ index a60156b..f03a9e7 100644
            )}
            data-testid={timestamp}
            tabIndex={0}
-diff --git a/ts/services/expiringMessagesDeletion.ts b/ts/services/expiringMessagesDeletion.ts
-index 41a1a23..e26d418 100644
---- a/ts/services/expiringMessagesDeletion.ts
-+++ b/ts/services/expiringMessagesDeletion.ts
+diff --git a/ts/services/expiringMessagesDeletion.preload.ts b/ts/services/expiringMessagesDeletion.preload.ts
+index ff86370..14672e7 100644
+--- a/ts/services/expiringMessagesDeletion.preload.ts
++++ b/ts/services/expiringMessagesDeletion.preload.ts
 @@ -27,6 +27,8 @@ class ExpiringMessagesDeletionService {
    }
  
@@ -54,16 +54,16 @@ index 41a1a23..e26d418 100644
      log.info('checkExpiringMessages: checking for expiring messages');
  
      const soonestExpiry = await DataReader.getSoonestMessageExpiry();
-diff --git a/ts/util/deleteForEveryone.ts b/ts/util/deleteForEveryone.ts
-index d47feb6..daea0b6 100644
---- a/ts/util/deleteForEveryone.ts
-+++ b/ts/util/deleteForEveryone.ts
-@@ -11,6 +11,8 @@ import { isTooOldToModifyMessage } from './isTooOldToModifyMessage.js';
- import { drop } from './drop.js';
- import { eraseMessageContents } from './cleanup.js';
- import { notificationService } from '../services/notifications.js';
-+import { DataWriter } from '../sql/Client';
-+import { postSaveUpdates } from '../util/cleanup';
+diff --git a/ts/util/deleteForEveryone.preload.ts b/ts/util/deleteForEveryone.preload.ts
+index 0021832..f603cc1 100644
+--- a/ts/util/deleteForEveryone.preload.ts
++++ b/ts/util/deleteForEveryone.preload.ts
+@@ -11,6 +11,8 @@ import { isTooOldToModifyMessage } from './isTooOldToModifyMessage.std.js';
+ import { drop } from './drop.std.js';
+ import { eraseMessageContents } from './cleanup.preload.js';
+ import { notificationService } from '../services/notifications.preload.js';
++import { DataWriter } from '../sql/Client.preload.js';
++import { postSaveUpdates } from '../util/cleanup.preload.js';
  
  const log = createLogger('deleteForEveryone');
  
@@ -94,11 +94,11 @@ index d47feb6..daea0b6 100644
    if (message.deletingForEveryone || message.get('deletedForEveryone')) {
      return;
    }
-diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
-index 2f66d5d..251ec28 100644
---- a/ts/util/sendReceipts.ts
-+++ b/ts/util/sendReceipts.ts
-@@ -59,6 +59,9 @@ export async function sendReceipts({
+diff --git a/ts/util/sendReceipts.preload.ts b/ts/util/sendReceipts.preload.ts
+index cfb8e25..b0b79ff 100644
+--- a/ts/util/sendReceipts.preload.ts
++++ b/ts/util/sendReceipts.preload.ts
+@@ -56,6 +56,9 @@ export async function sendReceipts({
      return;
    }
  

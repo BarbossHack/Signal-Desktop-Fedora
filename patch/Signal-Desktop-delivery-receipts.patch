@@ -1,21 +1,21 @@
 diff --git a/package.json b/package.json
-index 2544d5d..3131718 100644
+index 31399e6..1896916 100644
 --- a/package.json
 +++ b/package.json
-@@ -517,7 +517,7 @@
-     "linux": {
-       "category": "Network;InstantMessaging;Chat",
+@@ -527,7 +527,7 @@
+         }
+       },
        "target": [
 -        "deb"
 +        "rpm"
        ],
        "icon": "build/icons/png",
        "publish": [],
-diff --git a/ts/util/sendReceipts.ts b/ts/util/sendReceipts.ts
-index bcfcc00..937cf89 100644
---- a/ts/util/sendReceipts.ts
-+++ b/ts/util/sendReceipts.ts
-@@ -57,6 +57,9 @@ export async function sendReceipts({
+diff --git a/ts/util/sendReceipts.preload.ts b/ts/util/sendReceipts.preload.ts
+index cfb8e25..b0b79ff 100644
+--- a/ts/util/sendReceipts.preload.ts
++++ b/ts/util/sendReceipts.preload.ts
+@@ -56,6 +56,9 @@ export async function sendReceipts({
      return;
    }
  

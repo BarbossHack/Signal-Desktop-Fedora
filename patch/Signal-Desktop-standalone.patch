@@ -1,8 +1,8 @@
-diff --git a/app/menu.ts b/app/menu.ts
-index c67d4c6..d54ae15 100644
---- a/app/menu.ts
-+++ b/app/menu.ts
-@@ -233,12 +233,10 @@ export const createTemplate = (
+diff --git a/app/menu.std.ts b/app/menu.std.ts
+index dcd65c0..b0ae4d5 100644
+--- a/app/menu.std.ts
++++ b/app/menu.std.ts
+@@ -235,12 +235,10 @@ export const createTemplate = (
          });
        }
  
@@ -16,22 +16,22 @@ index c67d4c6..d54ae15 100644
        fileMenu.submenu.unshift({
          type: 'separator',
 diff --git a/package.json b/package.json
-index 2544d5d..3131718 100644
+index 31399e6..1896916 100644
 --- a/package.json
 +++ b/package.json
-@@ -517,7 +517,7 @@
-     "linux": {
-       "category": "Network;InstantMessaging;Chat",
+@@ -527,7 +527,7 @@
+         }
+       },
        "target": [
 -        "deb"
 +        "rpm"
        ],
        "icon": "build/icons/png",
        "publish": [],
-diff --git a/ts/state/ducks/app.ts b/ts/state/ducks/app.ts
-index f1fb6ff..ae8c99a 100644
---- a/ts/state/ducks/app.ts
-+++ b/ts/state/ducks/app.ts
+diff --git a/ts/state/ducks/app.preload.ts b/ts/state/ducks/app.preload.ts
+index ddda047..e2e4398 100644
+--- a/ts/state/ducks/app.preload.ts
++++ b/ts/state/ducks/app.preload.ts
 @@ -94,7 +94,6 @@ function openStandalone(): ThunkAction<
  > {
    return dispatch => {

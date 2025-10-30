@@ -1,10 +1,10 @@
 diff --git a/package.json b/package.json
-index 2544d5d..3131718 100644
+index 31399e6..1896916 100644
 --- a/package.json
 +++ b/package.json
-@@ -517,7 +517,7 @@
-     "linux": {
-       "category": "Network;InstantMessaging;Chat",
+@@ -527,7 +527,7 @@
+         }
+       },
        "target": [
 -        "deb"
 +        "rpm"
