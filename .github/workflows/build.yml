@@ -21,7 +21,7 @@ jobs:
   dockerfile:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           export SIGNAL_VERSION=$(cat Makefile | grep SIGNAL_VERSION | head -n 1 | cut -d= -f2 | tr -d vV)
           echo "SIGNAL_VERSION=$SIGNAL_VERSION" >> $GITHUB_ENV
@@ -38,7 +38,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: type=raw,value=latest
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         id: build-and-push
         with:
           file: Dockerfile
@@ -59,7 +59,7 @@ jobs:
     if: needs.dockerfile.result == 'success'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: echo "SIGNAL_VERSION=$(cat Makefile | grep SIGNAL_VERSION | head -n 1 | cut -d= -f2 | tr -d vV)" >> $GITHUB_ENV
       - uses: docker/metadata-action@v5
         id: meta
@@ -71,7 +71,7 @@ jobs:
           docker run --rm -e SIGNAL_VERSION=${{ env.SIGNAL_VERSION }} -v ./output:/output:Z ${{ steps.meta.outputs.tags }}
           mv ./output/*.rpm .
       - run: sha256sum *.rpm > subject.checksums.txt
-      - uses: actions/attest@v2
+      - uses: actions/attest@v3
         with:
           subject-checksums: subject.checksums.txt
           predicate-type: "https://example.com/predicate/v1"
