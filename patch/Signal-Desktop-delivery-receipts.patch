@@ -1,16 +1,16 @@
 diff --git a/package.json b/package.json
-index 31399e6..1896916 100644
+index adb2364..dae1e1f 100644
 --- a/package.json
 +++ b/package.json
-@@ -527,7 +527,7 @@
-         }
+@@ -529,7 +529,7 @@
        },
+       "artifactName": "${name}_${version}_${arch}.${ext}",
        "target": [
 -        "deb"
 +        "rpm"
        ],
        "icon": "build/icons/png",
-       "publish": [],
+       "publish": [
 diff --git a/ts/util/sendReceipts.preload.ts b/ts/util/sendReceipts.preload.ts
 index cfb8e25..b0b79ff 100644
 --- a/ts/util/sendReceipts.preload.ts

@@ -22,7 +22,7 @@ ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # Install pnpm
-RUN npm install -g pnpm@10.3.0
+RUN npm install -g pnpm@10.18.1
 
 # Add patch file
 ARG PATCH_FILE

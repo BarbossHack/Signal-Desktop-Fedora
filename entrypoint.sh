@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 echo "------ Building Signal-Desktop v${SIGNAL_VERSION} ------"
 
@@ -24,6 +24,6 @@ pnpm run build-linux
 
 # Export rpm
 mkdir -p /output
-cp /root/Signal-Desktop/release/signal-desktop-*.rpm /output/
+find /root/Signal-Desktop -name "*.rpm" -exec cp {} /output/ \;
 
 echo -e "\e[42;30mDone !\e[0m"
