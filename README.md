@@ -13,7 +13,7 @@ Currently tested for :
 Install the latest prebuilt RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) using the following command:
 
 ```bash
-sudo dnf install "https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.83.0/signal-desktop-7.83.0.x86_64.rpm"
+sudo dnf install "https://github.com/BarbossHack/Signal-Desktop-Fedora/releases/download/v7.83.0/signal-desktop_7.83.0_x86_64.rpm"
 ```
 
 ## Build it yourself
