@@ -21,6 +21,9 @@ build: requirements clean
 	@podman build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
 	@podman run -it --rm -e SIGNAL_VERSION=$$(echo "$(SIGNAL_VERSION)" | tr -d vV) -v $$PWD/output:/output:Z signal-desktop-rpm:latest
 
+standalone:
+	@make --no-print-directory PATCH_FILE=Signal-Desktop-standalone.patch
+
 install:
 	@pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null || true && sleep 2
 	@pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null || true
@@ -44,5 +47,9 @@ update:
 		&& sed -i "s/FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" README.md \
 		&& sed -i "s/^FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" Makefile
 
-standalone:
-	@make --no-print-directory PATCH_FILE=Signal-Desktop-standalone.patch
+release: update
+	@git add .
+	@git commit -m "$(SIGNAL_VERSION)"
+	@git tag "$(SIGNAL_VERSION)"
+	@git push
+	@git push --tags
