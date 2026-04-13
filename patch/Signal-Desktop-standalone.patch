@@ -1,8 +1,8 @@
 diff --git a/app/menu.std.ts b/app/menu.std.ts
-index dcd65c0..b0ae4d5 100644
+index a8eb0ad..101a335 100644
 --- a/app/menu.std.ts
 +++ b/app/menu.std.ts
-@@ -235,12 +235,10 @@ export const createTemplate = (
+@@ -232,12 +232,10 @@ export const createTemplate = (
          });
        }
  
@@ -16,10 +16,10 @@ index dcd65c0..b0ae4d5 100644
        fileMenu.submenu.unshift({
          type: 'separator',
 diff --git a/package.json b/package.json
-index adb2364..dae1e1f 100644
+index 75f277b..0fdc288 100644
 --- a/package.json
 +++ b/package.json
-@@ -529,7 +529,7 @@
+@@ -558,7 +558,7 @@
        },
        "artifactName": "${name}_${version}_${arch}.${ext}",
        "target": [
@@ -29,7 +29,7 @@ index adb2364..dae1e1f 100644
        "icon": "build/icons/png",
        "publish": [
 diff --git a/ts/state/ducks/app.preload.ts b/ts/state/ducks/app.preload.ts
-index ddda047..e2e4398 100644
+index 7ccdc0c..d53abe7 100644
 --- a/ts/state/ducks/app.preload.ts
 +++ b/ts/state/ducks/app.preload.ts
 @@ -94,7 +94,6 @@ function openStandalone(): ThunkAction<
