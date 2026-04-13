@@ -4,36 +4,35 @@ SIGNAL_VERSION=v8.6.1
 FEDORA_VERSION=43
 
 PATCH_FILE="Signal-Desktop.patch"
-ARCH=$$(if [[ "$$(uname -m)" == "aarch64" ]]; then echo "arm64v8"; else echo "amd64"; fi)
+ARCH=$$(if [ "$$(uname -m)" == "aarch64" ]; then echo "arm64v8"; else echo "amd64"; fi)
 NODE_VERSION=$$(curl -s "https://raw.githubusercontent.com/signalapp/Signal-Desktop/refs/tags/v$$(echo "$(SIGNAL_VERSION)" | tr -d vV)/.nvmrc")
+ENGINE=podman
 
 all: build
 
-requirements:
-	@if ! command -v podman &> /dev/null; then echo -e "Podman is required but not installed.\n$$ sudo dnf install podman" && exit 1; fi
-
-build: requirements clean
+build: clean
 	@echo "SIGNAL_VERSION: $(SIGNAL_VERSION)"
 	@echo "FEDORA_VERSION: $(FEDORA_VERSION)"
 	@echo "ARCH: $(ARCH)"
 	@echo "PATCH_FILE: $(PATCH_FILE)"
 	@mkdir -p output
-	@podman build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
-	@podman run -it --rm -e SIGNAL_VERSION=$$(echo "$(SIGNAL_VERSION)" | tr -d vV) -v $$PWD/output:/output:Z signal-desktop-rpm:latest
+	@$(ENGINE) build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
+	@$(ENGINE) run --rm -e SIGNAL_VERSION=$$(echo "$(SIGNAL_VERSION)" | tr -d vV) -v $$PWD/output:/output:Z signal-desktop-rpm:latest
 
 standalone:
 	@make --no-print-directory PATCH_FILE=Signal-Desktop-standalone.patch
 
 install:
-	@pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null || true && sleep 2
-	@pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null || true
+	@-pkill --signal SIGHUP -x signal-desktop >/dev/null 2>/dev/null
+	@sleep 2
+	@-pkill --signal SIGKILL -x signal-desktop >/dev/null 2>/dev/null
 	@sudo dnf install -y output/*.rpm
 	@sudo sed -i 's|Exec=/opt/Signal/signal-desktop.*|Exec=/opt/Signal/signal-desktop --use-tray-icon %U|g' /usr/share/applications/signal-desktop.desktop
 	@sudo sed -i 's|StartupWMClass=Signal|StartupWMClass=signal|g' /usr/share/applications/signal-desktop.desktop
 
 clean:
-	@podman unshare rm -rf ./output
-	@podman rm -f -t 0 signal-desktop-rpm 2>/dev/null || true
+	@-$(ENGINE) unshare rm -rf ./output
+	@-$(ENGINE) rm -f -t 0 signal-desktop-rpm 2>/dev/null
 
 update:
 	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-[a-z]' | grep -v '\^{}' | sort -V | tail -n 1 | tr -d vV) \
