@@ -1,7 +1,7 @@
 .PHONY=build install clean update standalone
 
-SIGNAL_VERSION=v8.2.1
-FEDORA_VERSION=42
+SIGNAL_VERSION=v8.6.1
+FEDORA_VERSION=43
 
 PATCH_FILE="Signal-Desktop.patch"
 ARCH=$$(if [[ "$$(uname -m)" == "aarch64" ]]; then echo "arm64v8"; else echo "amd64"; fi)
