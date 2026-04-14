@@ -12,34 +12,19 @@ permissions:
 
 jobs:
   build:
-    name: Build ${{ matrix.name }}
-    runs-on: ${{ matrix.runs-on }}
-    container: ${{ matrix.container }}
-
     strategy:
       matrix:
-        include:
-          - name: fedora-42-x86_64
-            runs-on: ubuntu-latest
-            FEDORA_VERSION: 42
-          - name: fedora-42-aarch64
-            runs-on: ubuntu-24.04-arm
-            FEDORA_VERSION: 42
-          - name: fedora-43-x86_64
-            runs-on: ubuntu-latest
-            FEDORA_VERSION: 43
-          - name: fedora-43-aarch64
-            runs-on: ubuntu-24.04-arm
-            FEDORA_VERSION: 43
-
+        fedora: [42, 43]
+        distro: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.distro }}
     steps:
       - uses: actions/checkout@v6
-      - run: make ENGINE=docker SIGNAL_VERSION=v8.6.1 FEDORA_VERSION=${{ matrix.FEDORA_VERSION }} # $GITHUB_REF_NAME
+      - run: make ENGINE=docker SIGNAL_VERSION=v8.6.1 FEDORA_VERSION=${{ matrix.fedora }} # $GITHUB_REF_NAME
       - run: ls -lsah output/
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.name }}
+          name: fc${{ matrix.fedora }}-signal-desktop-${{ matrix.distro }}
           path: output/*.rpm
 
   # old-build:
