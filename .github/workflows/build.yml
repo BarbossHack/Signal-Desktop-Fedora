@@ -15,8 +15,8 @@ jobs:
     strategy:
       matrix:
         fedora: [42, 43]
-        distro: [ubuntu-latest, ubuntu-24.04-arm]
-    runs-on: ${{ matrix.distro }}
+        runs-on: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runs-on }}
     steps:
       - uses: actions/checkout@v6
       - run: make ENGINE=docker SIGNAL_VERSION=v8.6.1 FEDORA_VERSION=${{ matrix.fedora }} # $GITHUB_REF_NAME
@@ -24,7 +24,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: fc${{ matrix.fedora }}-signal-desktop-${{ matrix.distro }}
+          name: ${{ matrix.fedora }}
           path: output/*.rpm
 
   release:
