@@ -20,12 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: make ENGINE=docker SIGNAL_VERSION=v8.6.1 FEDORA_VERSION=${{ matrix.fedora }} # $GITHUB_REF_NAME
-      - run: ls -lsah output/
+      - run: mv output/*.rpm output/signal-desktop-${{ matrix.fedora }}.rpm
+      - run: |
+          f=$(find output/ -name "*.rpm")
+          base="$(basename ${f%.rpm})"
+          IFS=_ read -r name version arch <<< "$base"
+          mv "$f" "${name}_${version}_fc${{ matrix.fedora }}_${arch}.rpm"
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.fedora }}
-          path: output/*.rpm
+          name: fc${{ matrix.fedora }}-${{ matrix.runs-on }}
+          path: ./*.rpm
 
   release:
     needs: build
