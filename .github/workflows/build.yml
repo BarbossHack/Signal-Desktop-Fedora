@@ -38,6 +38,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
       - name: Download all artifacts
         uses: actions/download-artifact@v8
       - run: sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/${MY_GITHUB_REF_NAME#v}/g" .github/release-notes.md
