@@ -2,8 +2,8 @@ name: build
 
 on:
   push:
-    tags:
-      - "v*"
+    # tags:
+    #   - "v*"
 
 permissions:
   contents: write
@@ -12,22 +12,53 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.runs-on }}
+    container: ${{ matrix.container }}
+
+    strategy:
+      matrix:
+        include:
+          - name: fedora-42-x86_64
+            runs-on: ubuntu-latest
+            FEDORA_VERSION: 42
+          - name: fedora-42-aarch64
+            runs-on: ubuntu-24.04-arm
+            FEDORA_VERSION: 42
+          - name: fedora-43-x86_64
+            runs-on: ubuntu-latest
+            FEDORA_VERSION: 43
+          - name: fedora-43-aarch64
+            runs-on: ubuntu-24.04-arm
+            FEDORA_VERSION: 43
+
     steps:
       - uses: actions/checkout@v6
-      - run: make ENGINE=docker SIGNAL_VERSION=$GITHUB_REF_NAME
-      - run: sha256sum ./output/*.rpm > subject.checksums.txt
-      - uses: actions/attest@v4
+      - run: make ENGINE=docker SIGNAL_VERSION=v8.6.1 FEDORA_VERSION=${{ matrix.FEDORA_VERSION }} # $GITHUB_REF_NAME
+      - run: ls -lsah output/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
         with:
-          subject-checksums: subject.checksums.txt
-          predicate-type: "https://example.com/predicate/v1"
-          predicate: "{}"
-      - run: sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/${GITHUB_REF_NAME#v}/g" .github/release-notes.md
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file ".github/release-notes.md"
-      - name: Upload artifact to GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" ./output/*.rpm --repo "$GITHUB_REPOSITORY"
+          name: ${{ matrix.name }}
+          path: output/*.rpm
+
+  # old-build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - run: make ENGINE=docker SIGNAL_VERSION=$GITHUB_REF_NAME
+  #     - run: sha256sum ./output/*.rpm > subject.checksums.txt
+  #     - uses: actions/attest@v4
+  #       with:
+  #         subject-checksums: subject.checksums.txt
+  #         predicate-type: "https://example.com/predicate/v1"
+  #         predicate: "{}"
+  #     - run: sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/${GITHUB_REF_NAME#v}/g" .github/release-notes.md
+  #     - name: Create GitHub Release
+  #       env:
+  #         GITHUB_TOKEN: ${{ github.token }}
+  #       run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file ".github/release-notes.md"
+  #     - name: Upload artifact to GitHub Release
+  #       env:
+  #         GITHUB_TOKEN: ${{ github.token }}
+  #       run: gh release upload "$GITHUB_REF_NAME" ./output/*.rpm --repo "$GITHUB_REPOSITORY"
