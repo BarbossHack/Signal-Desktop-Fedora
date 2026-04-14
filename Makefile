@@ -38,8 +38,7 @@ update:
 	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-[a-z]' | grep -v '\^{}' | sort -V | tail -n 1 | tr -d vV) \
 		&& echo "SIGNAL_VERSION: v$$SIGNAL_VERSION" \
 		&& sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/$$SIGNAL_VERSION/g" README.md \
-		&& sed -i -E "s/^SIGNAL_VERSION := v?[0-9]\.[0-9]{1,2}\.[0-9]/SIGNAL_VERSION := v$$SIGNAL_VERSION/g" Makefile \
-		&& sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/$$SIGNAL_VERSION/g" .github/release-notes.md
+		&& sed -i -E "s/^SIGNAL_VERSION := v?[0-9]\.[0-9]{1,2}\.[0-9]/SIGNAL_VERSION := v$$SIGNAL_VERSION/g" Makefile
 	@FEDORA_VERSION=$$(if [ -f /etc/os-release ]; then . /etc/os-release && [ "$$ID" = "fedora" ] && echo "$$VERSION_ID"; else echo ""; fi) \
 		&& echo "FEDORA_VERSION: $$FEDORA_VERSION" \
 		&& sed -i "s/^- Fedora .*/- Fedora $$FEDORA_VERSION/g" README.md \
