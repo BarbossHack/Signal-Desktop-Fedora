@@ -20,7 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: make ENGINE=docker SIGNAL_VERSION=v8.6.1 FEDORA_VERSION=${{ matrix.fedora }} # $GITHUB_REF_NAME
-      - run: mv output/*.rpm output/signal-desktop-${{ matrix.fedora }}.rpm
       - run: |
           f=$(find output/ -name "*.rpm")
           base="$(basename ${f%.rpm})"
