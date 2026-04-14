@@ -27,6 +27,15 @@ jobs:
           name: fc${{ matrix.fedora }}-signal-desktop-${{ matrix.distro }}
           path: output/*.rpm
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+      - run: ls -Rlsah .
+      - run: find . -name "*.rpm"
+
   # old-build:
   #   runs-on: ubuntu-latest
   #   steps:
