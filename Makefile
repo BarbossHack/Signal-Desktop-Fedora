@@ -1,12 +1,12 @@
 .PHONY=build install clean update standalone
 
-SIGNAL_VERSION=v8.6.1
-FEDORA_VERSION=43
+SIGNAL_VERSION := v8.6.1
+FEDORA_VERSION := 43
 
-PATCH_FILE="Signal-Desktop.patch"
-ARCH=$$(if [ "$$(uname -m)" == "aarch64" ]; then echo "arm64v8"; else echo "amd64"; fi)
-NODE_VERSION=$$(curl -s "https://raw.githubusercontent.com/signalapp/Signal-Desktop/refs/tags/v$$(echo "$(SIGNAL_VERSION)" | tr -d vV)/.nvmrc")
-ENGINE=podman
+PATCH_FILE := "Signal-Desktop.patch"
+ARCH := $(if $(filter aarch64,$(shell uname -m)),arm64v8,amd64)
+NODE_VERSION := $(shell curl -s "https://raw.githubusercontent.com/signalapp/Signal-Desktop/refs/tags/v$$(echo "$(SIGNAL_VERSION)" | tr -d vV)/.nvmrc")
+ENGINE := podman
 
 all: build
 
