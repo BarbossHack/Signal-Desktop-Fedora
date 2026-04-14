@@ -14,6 +14,8 @@ build: clean
 	@echo "SIGNAL_VERSION: $(SIGNAL_VERSION)"
 	@echo "FEDORA_VERSION: $(FEDORA_VERSION)"
 	@echo "ARCH: $(ARCH)"
+	@echo "NODE_VERSION: $(NODE_VERSION)"
+	@echo "ENGINE: $(ENGINE)"
 	@echo "PATCH_FILE: $(PATCH_FILE)"
 	@mkdir -p output
 	@$(ENGINE) build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .

@@ -2,8 +2,8 @@ name: build
 
 on:
   push:
-    # tags:
-    #   - "v*"
+    tags:
+      - "v*"
 
 permissions:
   contents: write
