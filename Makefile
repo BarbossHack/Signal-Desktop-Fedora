@@ -1,12 +1,12 @@
 .PHONY=build install clean update standalone
 
-SIGNAL_VERSION=v8.6.1
-FEDORA_VERSION=43
+SIGNAL_VERSION := v8.6.1
+FEDORA_VERSION := 43
 
-PATCH_FILE="Signal-Desktop.patch"
-ARCH=$$(if [ "$$(uname -m)" == "aarch64" ]; then echo "arm64v8"; else echo "amd64"; fi)
-NODE_VERSION=$$(curl -s "https://raw.githubusercontent.com/signalapp/Signal-Desktop/refs/tags/v$$(echo "$(SIGNAL_VERSION)" | tr -d vV)/.nvmrc")
-ENGINE=podman
+PATCH_FILE := "Signal-Desktop.patch"
+ARCH := $(if $(filter aarch64,$(shell uname -m)),arm64v8,amd64)
+NODE_VERSION := $(shell curl -s "https://raw.githubusercontent.com/signalapp/Signal-Desktop/refs/tags/v$$(echo "$(SIGNAL_VERSION)" | tr -d vV)/.nvmrc")
+ENGINE := podman
 
 all: build
 
@@ -14,6 +14,8 @@ build: clean
 	@echo "SIGNAL_VERSION: $(SIGNAL_VERSION)"
 	@echo "FEDORA_VERSION: $(FEDORA_VERSION)"
 	@echo "ARCH: $(ARCH)"
+	@echo "NODE_VERSION: $(NODE_VERSION)"
+	@echo "ENGINE: $(ENGINE)"
 	@echo "PATCH_FILE: $(PATCH_FILE)"
 	@mkdir -p output
 	@$(ENGINE) build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
@@ -38,13 +40,12 @@ update:
 	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-[a-z]' | grep -v '\^{}' | sort -V | tail -n 1 | tr -d vV) \
 		&& echo "SIGNAL_VERSION: v$$SIGNAL_VERSION" \
 		&& sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/$$SIGNAL_VERSION/g" README.md \
-		&& sed -i -E "s/^SIGNAL_VERSION=v?[0-9]\.[0-9]{1,2}\.[0-9]/SIGNAL_VERSION=v$$SIGNAL_VERSION/g" Makefile \
-		&& sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/$$SIGNAL_VERSION/g" .github/release-notes.md
+		&& sed -i -E "s/^SIGNAL_VERSION := v?[0-9]\.[0-9]{1,2}\.[0-9]/SIGNAL_VERSION := v$$SIGNAL_VERSION/g" Makefile
 	@FEDORA_VERSION=$$(if [ -f /etc/os-release ]; then . /etc/os-release && [ "$$ID" = "fedora" ] && echo "$$VERSION_ID"; else echo ""; fi) \
 		&& echo "FEDORA_VERSION: $$FEDORA_VERSION" \
 		&& sed -i "s/^- Fedora .*/- Fedora $$FEDORA_VERSION/g" README.md \
 		&& sed -i "s/FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" README.md \
-		&& sed -i "s/^FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" Makefile
+		&& sed -i "s/^FEDORA_VERSION := .*/FEDORA_VERSION := $$FEDORA_VERSION/g" Makefile
 
 release: update
 	@git add .

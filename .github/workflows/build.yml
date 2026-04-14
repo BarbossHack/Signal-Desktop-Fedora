@@ -7,27 +7,42 @@ on:
 
 permissions:
   contents: write
-  id-token: write
-  attestations: write
+
+env:
+  MY_GITHUB_REF_NAME: v8.6.1
 
 jobs:
   build:
+    strategy:
+      matrix:
+        fedora: [42, 43]
+        runs-on: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v6
+      - run: make ENGINE=docker SIGNAL_VERSION=${MY_GITHUB_REF_NAME} FEDORA_VERSION=${{ matrix.fedora }}
+      - run: |
+          f=$(find output/ -name "*.rpm")
+          base="$(basename ${f%.rpm})"
+          IFS=_ read -r name version arch <<< "$base"
+          mv "$f" "${name}_${version}_fc${{ matrix.fedora }}_${arch}.rpm"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: fc${{ matrix.fedora }}-${{ matrix.runs-on }}
+          path: ./*.rpm
+
+  release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: make ENGINE=docker SIGNAL_VERSION=$GITHUB_REF_NAME
-      - run: sha256sum ./output/*.rpm > subject.checksums.txt
-      - uses: actions/attest@v4
-        with:
-          subject-checksums: subject.checksums.txt
-          predicate-type: "https://example.com/predicate/v1"
-          predicate: "{}"
-      - run: sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/${GITHUB_REF_NAME#v}/g" .github/release-notes.md
+      - uses: actions/download-artifact@v8
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file ".github/release-notes.md"
+        run: gh release create "${MY_GITHUB_REF_NAME}-dry-run" --repo "$GITHUB_REPOSITORY"
       - name: Upload artifact to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" ./output/*.rpm --repo "$GITHUB_REPOSITORY"
+        run: find . -name "*.rpm" -exec gh release upload "${MY_GITHUB_REF_NAME}-dry-run" {} --repo "$GITHUB_REPOSITORY" \;
