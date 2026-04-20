@@ -1,6 +1,6 @@
 .PHONY=build install clean update standalone
 
-SIGNAL_VERSION := v8.6.1
+SIGNAL_VERSION := v8.7.0
 FEDORA_VERSION := 43
 
 PATCH_FILE := "Signal-Desktop.patch"
@@ -45,11 +45,12 @@ update:
 		&& echo "FEDORA_VERSION: $$FEDORA_VERSION" \
 		&& sed -i "s/^- Fedora .*/- Fedora $$FEDORA_VERSION/g" README.md \
 		&& sed -i "s/FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" README.md \
+		&& sed -i -E "s/fc[0-9]{2}/fc$$FEDORA_VERSION/g" README.md \
 		&& sed -i "s/^FEDORA_VERSION := .*/FEDORA_VERSION := $$FEDORA_VERSION/g" Makefile
 
 release: update
 	@git add .
 	@git commit -m "$(SIGNAL_VERSION)"
 	@git tag "$(SIGNAL_VERSION)"
-	@git push
+	@git push -f
 	@git push --tags

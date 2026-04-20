@@ -8,19 +8,16 @@ on:
 permissions:
   contents: write
 
-env:
-  MY_GITHUB_REF_NAME: v8.6.1
-
 jobs:
   build:
     strategy:
       matrix:
-        fedora: [42, 43]
-        runs-on: [ubuntu-latest, ubuntu-24.04-arm]
+        fedora: [ 42, 43 ]
+        runs-on: [ ubuntu-latest, ubuntu-24.04-arm ]
     runs-on: ${{ matrix.runs-on }}
     steps:
       - uses: actions/checkout@v6
-      - run: make ENGINE=docker SIGNAL_VERSION=${MY_GITHUB_REF_NAME} FEDORA_VERSION=${{ matrix.fedora }}
+      - run: make ENGINE=docker SIGNAL_VERSION=${GITHUB_REF_NAME} FEDORA_VERSION=${{ matrix.fedora }}
       - run: |
           f=$(find output/ -name "*.rpm")
           base="$(basename ${f%.rpm})"
@@ -41,8 +38,8 @@ jobs:
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: gh release create "${MY_GITHUB_REF_NAME}-dry-run" --repo "$GITHUB_REPOSITORY"
+        run: gh release create "${GITHUB_REF_NAME}" --repo "$GITHUB_REPOSITORY"
       - name: Upload artifact to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: find . -name "*.rpm" -exec gh release upload "${MY_GITHUB_REF_NAME}-dry-run" {} --repo "$GITHUB_REPOSITORY" \;
+        run: find . -name "*.rpm" -exec gh release upload "${GITHUB_REF_NAME}" {} --repo "$GITHUB_REPOSITORY" \;

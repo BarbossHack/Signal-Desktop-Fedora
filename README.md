@@ -5,15 +5,15 @@
 Currently tested for :
 
 - Fedora 43
-- Signal Desktop v8.6.1
+- Signal Desktop v8.7.0
 - x86_64 and aarch64 architectures
 
 ## How to install
 
-Install the latest prebuilt RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) using the following command:
+Download the latest prebuilt RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) and install it using the following command:
 
 ```bash
-sudo dnf install ./signal-desktop_8.6.1_x86_64.rpm
+sudo dnf install ./signal-desktop_8.7.0_fc43_x86_64.rpm
 ```
 
 ## Build it yourself
@@ -30,7 +30,7 @@ make install
 You can change the Signal Desktop or Fedora version by using the following parameters:
 
 ```bash
-make SIGNAL_VERSION=v8.6.1 FEDORA_VERSION=43
+make SIGNAL_VERSION=v8.7.0 FEDORA_VERSION=43
 make install
 ```
 
