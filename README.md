@@ -23,7 +23,7 @@ make install
 You can change the Signal Desktop or Fedora version by using the following parameters:
 
 ```bash
-make SIGNAL_VERSION=v8.7.0 FEDORA_VERSION=43
+make SIGNAL_VERSION=v8.8.0 FEDORA_VERSION=43
 make install
 ```
 
