@@ -43,7 +43,6 @@ update:
 		&& sed -i -E "s/^SIGNAL_VERSION := v?[0-9]\.[0-9]{1,2}\.[0-9]/SIGNAL_VERSION := v$$SIGNAL_VERSION/g" Makefile
 	@FEDORA_VERSION=$$(if [ -f /etc/os-release ]; then . /etc/os-release && [ "$$ID" = "fedora" ] && echo "$$VERSION_ID"; else echo ""; fi) \
 		&& echo "FEDORA_VERSION: $$FEDORA_VERSION" \
-		&& sed -i "s/^- Fedora .*/- Fedora $$FEDORA_VERSION/g" README.md \
 		&& sed -i "s/FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" README.md \
 		&& sed -i -E "s/fc[0-9]{2}/fc$$FEDORA_VERSION/g" README.md \
 		&& sed -i "s/^FEDORA_VERSION := .*/FEDORA_VERSION := $$FEDORA_VERSION/g" Makefile

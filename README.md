@@ -2,18 +2,11 @@
 
 [Signal Desktop](https://github.com/signalapp/Signal-Desktop) RPM for Fedora.
 
-Currently tested for :
-
-- Fedora 43
-- Signal Desktop v8.7.0
-- x86_64 and aarch64 architectures
-
 ## How to install
 
-Download the latest prebuilt RPM from [GitHub Releases](https://github.com/BarbossHack/Signal-Desktop-Fedora/releases) and install it using the following command:
-
 ```bash
-sudo dnf install ./signal-desktop_8.7.0_fc43_x86_64.rpm
+sudo curl -so /etc/yum.repos.d/signal-desktop-barbosshack.repo https://raw.githubusercontent.com/BarbossHack/Signal-Desktop-Fedora/refs/heads/dry-run/repo/signal-desktop-barbosshack.repo
+sudo dnf install signal-desktop
 ```
 
 ## Build it yourself

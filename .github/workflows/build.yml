@@ -5,36 +5,87 @@ on:
     tags:
       - "v*"
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   build:
     strategy:
       matrix:
-        fedora: [ 42, 43 ]
-        runs-on: [ ubuntu-latest, ubuntu-24.04-arm ]
-    runs-on: ${{ matrix.runs-on }}
+        fedora: [ 42, 43, 44 ]
+        arch: [ x86_64, aarch64 ]
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
     steps:
+      - name: Print matrix
+        run: |
+          echo "fedora: ${{ matrix.fedora }}"
+          echo "arch: ${{ matrix.arch }}"
+          echo "runner: ${{ matrix.runner }}"
       - uses: actions/checkout@v6
       - run: make ENGINE=docker SIGNAL_VERSION=${GITHUB_REF_NAME} FEDORA_VERSION=${{ matrix.fedora }}
-      - run: |
-          f=$(find output/ -name "*.rpm")
-          base="$(basename ${f%.rpm})"
-          IFS=_ read -r name version arch <<< "$base"
-          mv "$f" "${name}_${version}_fc${{ matrix.fedora }}_${arch}.rpm"
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+      - name: Install tools
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt update
+          sudo apt install -y createrepo-c dnf dnf-plugins-core
+      - name: Import GPG key
+        env:
+          REPO_PRIVATE_KEY: ${{ secrets.REPO_PRIVATE_KEY }}
+        run: echo "$REPO_PRIVATE_KEY" | gpg --batch --import
+      - name: Create repository
+        run: |
+          mkdir -p repo/${{ matrix.fedora }}/${{ matrix.arch }}
+          cp output/*.rpm repo/${{ matrix.fedora }}/${{ matrix.arch }}/
+          cd repo/${{ matrix.fedora }}/${{ matrix.arch }}
+          export GPG_TTY=$(tty)
+          rpm --define "_gpg_name 98AD93E28D7EB8B7F990BF2E55827D8FD54C06D0" --addsign *.rpm
+          createrepo_c --update .
+          gpg --detach-sign --armor repodata/repomd.xml
+      - uses: actions/upload-artifact@v7
         with:
-          name: fc${{ matrix.fedora }}-${{ matrix.runs-on }}
-          path: ./*.rpm
+          name: repo-${{ matrix.fedora }}-${{ matrix.arch }}
+          path: repo
 
-  release:
+  deploy-repository:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v8
+        with:
+          merge-multiple: true
+          path: repo
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: repo
+      - uses: actions/deploy-pages@v5
+
+  release:
+    needs: deploy-repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          merge-multiple: true
+          path: repo
+      - name: Rename artifacts
+        run: |
+          for f in $(find repo/ -name "*.rpm"); do
+            fedora="$(basename "$(dirname "$(dirname "$f")")")"
+            base="$(basename ${f%.rpm})"
+            IFS=_ read -r name version arch <<< "$base"
+            mv "$f" "${name}_${version}_fc${fedora}_${arch}.rpm"
+          done
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}

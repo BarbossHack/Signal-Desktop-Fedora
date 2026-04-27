@@ -1,0 +1,10 @@
+[signal-desktop-barbosshack]
+# From https://github.com/BarbossHack/Signal-Desktop-Fedora
+name=Signal Desktop (@Barbosshack)
+baseurl=https://barbosshack.github.io/Signal-Desktop-Fedora/$releasever/$basearch
+enabled=1
+metadata_expire=7d
+skip_if_unavailable=True
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://raw.githubusercontent.com/BarbossHack/Signal-Desktop-Fedora/refs/heads/master/repo/signal-desktop-barbosshack.gpg
