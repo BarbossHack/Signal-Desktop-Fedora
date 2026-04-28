@@ -5,7 +5,7 @@
 ## How to install
 
 ```bash
-sudo curl -so /etc/yum.repos.d/signal-desktop-barbosshack.repo https://raw.githubusercontent.com/BarbossHack/Signal-Desktop-Fedora/refs/heads/dry-run/repo/signal-desktop-barbosshack.repo
+sudo curl -so /etc/yum.repos.d/signal-desktop-barbosshack.repo "https://raw.githubusercontent.com/BarbossHack/Signal-Desktop-Fedora/refs/heads/master/repo/signal-desktop-barbosshack.repo"
 sudo dnf install signal-desktop
 ```
 
