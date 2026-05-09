@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 permissions: {}
 
@@ -11,8 +12,8 @@ jobs:
   build:
     strategy:
       matrix:
-        fedora: [ 42, 43, 44 ]
-        arch: [ x86_64, aarch64 ]
+        fedora: [42, 43, 44]
+        arch: [x86_64, aarch64]
         include:
           - arch: x86_64
             runner: ubuntu-latest

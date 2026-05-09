@@ -1,0 +1,54 @@
+name: cron
+
+on:
+  push:
+    paths:
+      - ".github/workflows/cron.yml"
+  schedule:
+    - cron: "0 2 * * *" # every day 03:00 am UTC
+  workflow_dispatch:
+
+run-name: "cron"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Github check
+        run: |
+          NEW_VERSION=$(curl -s --fail https://api.github.com/repos/signalapp/Signal-Desktop/releases/latest | jq -r .tag_name)
+          if [ -z "$NEW_VERSION" ]; then
+            echo "Failed to fetch NEW_VERSION from GitHub API"
+            exit 1
+          fi
+          echo "NEW_VERSION: $NEW_VERSION"
+          CURRENT_VERSION=$(curl -s --fail https://api.github.com/repos/BarbossHack/Signal-Desktop-Fedora/releases/latest | jq -r .tag_name)
+          if [ -z "$CURRENT_VERSION" ]; then
+            echo "Failed to fetch CURRENT_VERSION from GitHub API"
+            exit 1
+          fi
+          echo "CURRENT_VERSION: $CURRENT_VERSION"
+          if [ "$NEW_VERSION" != "$CURRENT_VERSION" ]; then
+            echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+          fi
+      - name: Try to build
+        if: ${{ env.NEW_VERSION }}
+        run: make ENGINE=docker SIGNAL_VERSION=${{ env.NEW_VERSION }} FEDORA_VERSION=44
+      - name: Configure git
+        if: ${{ env.NEW_VERSION }}
+        run: |
+          git config --local user.email "barbossh4ck@protonmail.com"
+          git config --local user.name "BarbossHack"
+      - name: Commit and release
+        if: ${{ env.NEW_VERSION }}
+        run: |
+          make update-signal
+          make release
+          gh workflow run "build.yml" --ref ${{ env.NEW_VERSION }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

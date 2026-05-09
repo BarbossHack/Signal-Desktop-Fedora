@@ -36,18 +36,20 @@ clean:
 	@-$(ENGINE) unshare rm -rf ./output
 	@-$(ENGINE) rm -f -t 0 signal-desktop-rpm 2>/dev/null
 
-update:
-	@SIGNAL_VERSION=$$(git ls-remote --tags https://github.com/signalapp/Signal-Desktop.git | awk -F/ '{print $$NF}' | grep -v '\-[a-z]' | grep -v '\^{}' | sort -V | tail -n 1 | tr -d vV) \
-		&& echo "SIGNAL_VERSION: v$$SIGNAL_VERSION" \
-		&& sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/$$SIGNAL_VERSION/g" README.md \
-		&& sed -i -E "s/^SIGNAL_VERSION := v?[0-9]\.[0-9]{1,2}\.[0-9]/SIGNAL_VERSION := v$$SIGNAL_VERSION/g" Makefile
+update-signal:
+	@NEW_SIGNAL_VERSION=$$(curl -s --fail https://api.github.com/repos/signalapp/Signal-Desktop/releases/latest | jq -r .tag_name | tr -d vV) \
+		&& echo "SIGNAL_VERSION: v$$NEW_SIGNAL_VERSION" \
+		&& sed -i -E "s/[0-9]\.[0-9]{1,2}\.[0-9]/$$NEW_SIGNAL_VERSION/g" README.md \
+		&& sed -i -E "s/^SIGNAL_VERSION := v?[0-9]\.[0-9]{1,2}\.[0-9]/SIGNAL_VERSION := v$$NEW_SIGNAL_VERSION/g" Makefile
+
+update: update-signal
 	@FEDORA_VERSION=$$(if [ -f /etc/os-release ]; then . /etc/os-release && [ "$$ID" = "fedora" ] && echo "$$VERSION_ID"; else echo ""; fi) \
 		&& echo "FEDORA_VERSION: $$FEDORA_VERSION" \
 		&& sed -i "s/FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" README.md \
 		&& sed -i -E "s/fc[0-9]{2}/fc$$FEDORA_VERSION/g" README.md \
 		&& sed -i "s/^FEDORA_VERSION := .*/FEDORA_VERSION := $$FEDORA_VERSION/g" Makefile
 
-release: update
+release:
 	@git add .
 	@git commit -m "$(SIGNAL_VERSION)"
 	@git tag "$(SIGNAL_VERSION)"
