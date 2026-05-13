@@ -6,6 +6,8 @@ on:
       - "v*"
   workflow_dispatch:
 
+run-name: ${{ github.ref_name }}
+
 permissions: {}
 
 jobs:
