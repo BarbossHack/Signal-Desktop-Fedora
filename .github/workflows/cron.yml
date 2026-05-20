@@ -18,7 +18,7 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Github check
         run: |
           NEW_VERSION=$(curl -s --fail https://api.github.com/repos/signalapp/Signal-Desktop/releases/latest | jq -r .tag_name)

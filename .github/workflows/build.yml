@@ -12,6 +12,7 @@ permissions: {}
 
 jobs:
   build:
+    if: github.repository == 'BarbossHack/Signal-Desktop-Fedora'
     strategy:
       matrix:
         fedora: [42, 43, 44]
@@ -28,7 +29,7 @@ jobs:
           echo "fedora: ${{ matrix.fedora }}"
           echo "arch: ${{ matrix.arch }}"
           echo "runner: ${{ matrix.runner }}"
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - run: make ENGINE=docker SIGNAL_VERSION=${GITHUB_REF_NAME} FEDORA_VERSION=${{ matrix.fedora }}
       - name: Install tools
         run: |
@@ -48,36 +49,38 @@ jobs:
           rpm --define "_gpg_name 98AD93E28D7EB8B7F990BF2E55827D8FD54C06D0" --addsign *.rpm
           createrepo_c --update .
           gpg --detach-sign --armor repodata/repomd.xml
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: repo-${{ matrix.fedora }}-${{ matrix.arch }}
           path: repo
 
   deploy-repository:
     needs: build
+    if: github.repository == 'BarbossHack/Signal-Desktop-Fedora'
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v8
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           merge-multiple: true
           path: repo
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
         with:
           path: repo
-      - uses: actions/deploy-pages@v5
+      - uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
 
   release:
     needs: deploy-repository
+    if: github.repository == 'BarbossHack/Signal-Desktop-Fedora'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v8
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           merge-multiple: true
           path: repo
@@ -89,11 +92,15 @@ jobs:
             IFS=_ read -r name version arch <<< "$base"
             mv "$f" "${name}_${version}_fc${fedora}_${arch}.rpm"
           done
-      - name: Create GitHub Release
+      - name: Create GitHub Release Draft
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" --repo "$GITHUB_REPOSITORY"
+        run: gh release create "${GITHUB_REF_NAME}" --repo "$GITHUB_REPOSITORY" --draft
       - name: Upload artifact to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: find . -name "*.rpm" -exec gh release upload "${GITHUB_REF_NAME}" {} --repo "$GITHUB_REPOSITORY" \;
+      - name: Publish the release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: gh release edit "${GITHUB_REF_NAME}" --repo "$GITHUB_REPOSITORY" --draft=false
