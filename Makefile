@@ -1,6 +1,6 @@
 .PHONY=build install clean update standalone
 
-SIGNAL_VERSION := v8.10.0
+SIGNAL_VERSION := v8.11.0
 FEDORA_VERSION := 43
 
 PATCH_FILE := "Signal-Desktop.patch"
