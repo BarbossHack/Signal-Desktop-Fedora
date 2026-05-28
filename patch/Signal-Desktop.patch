@@ -11,3 +11,20 @@ index 0de695d..06c0579 100644
            "arch": "x64"
          }
        ],
+diff --git a/scripts/prepare_linux_build.mjs b/scripts/prepare_linux_build.mjs
+index 4cd497b..7c8aafc 100644
+--- a/scripts/prepare_linux_build.mjs
++++ b/scripts/prepare_linux_build.mjs
+@@ -5,10 +5,10 @@ import fs from 'node:fs';
+ import _ from 'lodash';
+ import packageJson from '../package.json' with { type: 'json' };
+ 
+-const TARGETS = new Set(['appimage', 'deb']);
++const TARGETS = new Set(['appimage', 'rpm']);
+ const ARCHITECTURES = new Set(['arm64', 'x64']);
+ 
+-const targets = (process.argv[2] || 'deb').split(',');
++const targets = (process.argv[2] || 'rpm').split(',');
+ if (
+   targets.length === 0 ||
+   !targets.every(target => TARGETS.has(target.toLowerCase()))

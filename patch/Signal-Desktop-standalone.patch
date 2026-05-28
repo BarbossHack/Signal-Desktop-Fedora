@@ -15,19 +15,6 @@ index a8eb0ad..101a335 100644
  
        fileMenu.submenu.unshift({
          type: 'separator',
-diff --git a/package.json b/package.json
-index 0de695d..06c0579 100644
---- a/package.json
-+++ b/package.json
-@@ -529,7 +529,7 @@
-       "artifactName": "${name}_${version}_${arch}.${ext}",
-       "target": [
-         {
--          "target": "deb",
-+          "target": "rpm",
-           "arch": "x64"
-         }
-       ],
 diff --git a/ts/state/ducks/app.preload.ts b/ts/state/ducks/app.preload.ts
 index ca11661..2675b4a 100644
 --- a/ts/state/ducks/app.preload.ts

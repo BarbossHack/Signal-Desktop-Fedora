@@ -24,9 +24,8 @@ ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 # Install pnpm
 RUN npm install -g pnpm@10.18.1
 
-# Add patch file
-ARG PATCH_FILE
-COPY ${PATCH_FILE} /root/Signal-Desktop.patch
+# Add patch files
+COPY ./patch/ /root/
 
 # Add entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

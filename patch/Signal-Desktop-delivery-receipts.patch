@@ -1,16 +1,3 @@
-diff --git a/package.json b/package.json
-index 0de695d..06c0579 100644
---- a/package.json
-+++ b/package.json
-@@ -529,7 +529,7 @@
-       "artifactName": "${name}_${version}_${arch}.${ext}",
-       "target": [
-         {
--          "target": "deb",
-+          "target": "rpm",
-           "arch": "x64"
-         }
-       ],
 diff --git a/ts/util/sendReceipts.preload.ts b/ts/util/sendReceipts.preload.ts
 index 0da5279..11cda7c 100644
 --- a/ts/util/sendReceipts.preload.ts

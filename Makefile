@@ -18,8 +18,8 @@ build: clean
 	@echo "ENGINE: $(ENGINE)"
 	@echo "PATCH_FILE: $(PATCH_FILE)"
 	@mkdir -p output
-	@$(ENGINE) build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
-	@$(ENGINE) run --rm -e SIGNAL_VERSION=$$(echo "$(SIGNAL_VERSION)" | tr -d vV) -v $$PWD/output:/output:Z --name signal-desktop-rpm signal-desktop-rpm:latest
+	@$(ENGINE) build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
+	@$(ENGINE) run --rm -e SIGNAL_VERSION=$$(echo "$(SIGNAL_VERSION)" | tr -d vV) -e ARCH=$(ARCH) -e PATCH_FILE=$(PATCH_FILE) -v $$PWD/output:/output:Z --name signal-desktop-rpm signal-desktop-rpm:latest
 
 standalone:
 	@make --no-print-directory PATCH_FILE=Signal-Desktop-standalone.patch
