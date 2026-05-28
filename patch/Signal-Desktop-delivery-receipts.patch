@@ -1,21 +1,21 @@
 diff --git a/package.json b/package.json
-index 75f277b..0fdc288 100644
+index 0de695d..06c0579 100644
 --- a/package.json
 +++ b/package.json
-@@ -558,7 +558,7 @@
-       },
+@@ -529,7 +529,7 @@
        "artifactName": "${name}_${version}_${arch}.${ext}",
        "target": [
--        "deb"
-+        "rpm"
+         {
+-          "target": "deb",
++          "target": "rpm",
+           "arch": "x64"
+         }
        ],
-       "icon": "build/icons/png",
-       "publish": [
 diff --git a/ts/util/sendReceipts.preload.ts b/ts/util/sendReceipts.preload.ts
-index eefff4d..a86eb5e 100644
+index 0da5279..11cda7c 100644
 --- a/ts/util/sendReceipts.preload.ts
 +++ b/ts/util/sendReceipts.preload.ts
-@@ -55,6 +55,9 @@ export async function sendReceipts({
+@@ -56,6 +56,9 @@ export async function sendReceipts({
      return;
    }
  

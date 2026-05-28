@@ -4,7 +4,7 @@ FROM docker.io/${ARCH}/fedora:${FEDORA_VERSION}
 
 # Install build requirements
 RUN dnf update -y \
-    && dnf install -y g++ python make gcc git rpm-build libxcrypt-compat patch \
+    && dnf install -y g++ python make gcc git rpm-build libxcrypt-compat pulseaudio-libs-devel patch \
     && dnf install -y ruby-devel && gem install fpm \
     && dnf clean all
 

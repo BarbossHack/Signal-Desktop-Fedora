@@ -12,6 +12,8 @@ patch -p1 </root/Signal-Desktop.patch
 
 # Build Signal-Desktop
 export USE_SYSTEM_FPM=true
+# shellcheck disable=SC2155
+export SOURCE_DATE_EPOCH="$(date +"%s")"
 pnpm install --frozen-lockfile
 pnpm run clean-transpile
 cd sticker-creator

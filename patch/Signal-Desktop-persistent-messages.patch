@@ -1,21 +1,21 @@
 diff --git a/package.json b/package.json
-index 75f277b..0fdc288 100644
+index 0de695d..06c0579 100644
 --- a/package.json
 +++ b/package.json
-@@ -558,7 +558,7 @@
-       },
+@@ -529,7 +529,7 @@
        "artifactName": "${name}_${version}_${arch}.${ext}",
        "target": [
--        "deb"
-+        "rpm"
+         {
+-          "target": "deb",
++          "target": "rpm",
+           "arch": "x64"
+         }
        ],
-       "icon": "build/icons/png",
-       "publish": [
 diff --git a/ts/components/conversation/Message.dom.tsx b/ts/components/conversation/Message.dom.tsx
-index 1f99d5c..a9efab9 100644
+index 474123f..880034e 100644
 --- a/ts/components/conversation/Message.dom.tsx
 +++ b/ts/components/conversation/Message.dom.tsx
-@@ -3459,7 +3459,7 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3427,7 +3427,7 @@ export class Message extends PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
@@ -24,7 +24,7 @@ index 1f99d5c..a9efab9 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -3560,7 +3560,6 @@ export class Message extends React.PureComponent<Props, State> {
+@@ -3529,7 +3529,6 @@ export class Message extends PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
@@ -33,10 +33,10 @@ index 1f99d5c..a9efab9 100644
            data-testid={timestamp}
            tabIndex={0}
 diff --git a/ts/services/expiringMessagesDeletion.preload.ts b/ts/services/expiringMessagesDeletion.preload.ts
-index c95a8d9..45b4ed5 100644
+index 5df82e5..a46012e 100644
 --- a/ts/services/expiringMessagesDeletion.preload.ts
 +++ b/ts/services/expiringMessagesDeletion.preload.ts
-@@ -25,6 +25,8 @@ class ExpiringMessagesDeletionService {
+@@ -28,6 +28,8 @@ class ExpiringMessagesDeletionService {
    }
  
    async #destroyExpiredMessages() {
@@ -45,7 +45,7 @@ index c95a8d9..45b4ed5 100644
      try {
        log.info('destroyExpiredMessages: Loading messages...');
        const messages = await DataReader.getExpiredMessages();
-@@ -68,6 +70,8 @@ class ExpiringMessagesDeletionService {
+@@ -71,6 +73,8 @@ class ExpiringMessagesDeletionService {
    }
  
    async #checkExpiringMessages() {
@@ -94,10 +94,10 @@ index 2e6ba1d..b602c65 100644
      return;
    }
 diff --git a/ts/util/sendReceipts.preload.ts b/ts/util/sendReceipts.preload.ts
-index eefff4d..a86eb5e 100644
+index 0da5279..11cda7c 100644
 --- a/ts/util/sendReceipts.preload.ts
 +++ b/ts/util/sendReceipts.preload.ts
-@@ -55,6 +55,9 @@ export async function sendReceipts({
+@@ -56,6 +56,9 @@ export async function sendReceipts({
      return;
    }
  

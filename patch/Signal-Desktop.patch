@@ -1,13 +1,13 @@
 diff --git a/package.json b/package.json
-index 75f277b..0fdc288 100644
+index 0de695d..06c0579 100644
 --- a/package.json
 +++ b/package.json
-@@ -558,7 +558,7 @@
-       },
+@@ -529,7 +529,7 @@
        "artifactName": "${name}_${version}_${arch}.${ext}",
        "target": [
--        "deb"
-+        "rpm"
+         {
+-          "target": "deb",
++          "target": "rpm",
+           "arch": "x64"
+         }
        ],
-       "icon": "build/icons/png",
-       "publish": [

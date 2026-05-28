@@ -1,7 +1,7 @@
 .PHONY=build install clean update standalone
 
 SIGNAL_VERSION := v8.11.0
-FEDORA_VERSION := 43
+FEDORA_VERSION := 44
 
 PATCH_FILE := "Signal-Desktop.patch"
 ARCH := $(if $(filter aarch64,$(shell uname -m)),arm64v8,amd64)
@@ -19,7 +19,7 @@ build: clean
 	@echo "PATCH_FILE: $(PATCH_FILE)"
 	@mkdir -p output
 	@$(ENGINE) build --build-arg=ARCH=$(ARCH) --build-arg=FEDORA_VERSION=$(FEDORA_VERSION) --build-arg=PATCH_FILE=./patch/$(PATCH_FILE) --build-arg NODE_VERSION=$(NODE_VERSION) -t signal-desktop-rpm:latest .
-	@$(ENGINE) run --rm -e SIGNAL_VERSION=$$(echo "$(SIGNAL_VERSION)" | tr -d vV) -v $$PWD/output:/output:Z signal-desktop-rpm:latest
+	@$(ENGINE) run --rm -e SIGNAL_VERSION=$$(echo "$(SIGNAL_VERSION)" | tr -d vV) -v $$PWD/output:/output:Z --name signal-desktop-rpm signal-desktop-rpm:latest
 
 standalone:
 	@make --no-print-directory PATCH_FILE=Signal-Desktop-standalone.patch
@@ -33,8 +33,8 @@ install:
 	@sudo sed -i 's|StartupWMClass=Signal|StartupWMClass=signal|g' /usr/share/applications/signal-desktop.desktop
 
 clean:
+	@-$(ENGINE) rm -f -t0 signal-desktop-rpm
 	@-$(ENGINE) unshare rm -rf ./output
-	@-$(ENGINE) rm -f -t 0 signal-desktop-rpm 2>/dev/null
 
 update-signal:
 	@NEW_SIGNAL_VERSION=$$(curl -s --fail https://api.github.com/repos/signalapp/Signal-Desktop/releases/latest | jq -r .tag_name | tr -d vV) \
