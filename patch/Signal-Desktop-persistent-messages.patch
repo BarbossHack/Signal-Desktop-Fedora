@@ -1,8 +1,8 @@
 diff --git a/ts/components/conversation/Message.dom.tsx b/ts/components/conversation/Message.dom.tsx
-index 474123f..880034e 100644
+index 009e29b..16bebba 100644
 --- a/ts/components/conversation/Message.dom.tsx
 +++ b/ts/components/conversation/Message.dom.tsx
-@@ -3427,7 +3427,7 @@ export class Message extends PureComponent<Props, State> {
+@@ -3488,7 +3488,7 @@ export class Message extends PureComponent<Props, State> {
      const { expired, expiring, isTargeted, imageBroken } = this.state;
  
      if (expired) {
@@ -11,7 +11,7 @@ index 474123f..880034e 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -3529,7 +3529,6 @@ export class Message extends PureComponent<Props, State> {
+@@ -3595,7 +3595,6 @@ export class Message extends PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
@@ -42,18 +42,20 @@ index 5df82e5..a46012e 100644
  
      const soonestExpiry = await DataReader.getSoonestMessageExpiry();
 diff --git a/ts/util/deleteForEveryone.preload.ts b/ts/util/deleteForEveryone.preload.ts
-index 2e6ba1d..b602c65 100644
+index 2e6ba1d..abaf456 100644
 --- a/ts/util/deleteForEveryone.preload.ts
 +++ b/ts/util/deleteForEveryone.preload.ts
-@@ -13,6 +13,7 @@ import { isAciString } from './isAciString.std.ts';
+@@ -13,6 +13,9 @@ import { isAciString } from './isAciString.std.ts';
  import { eraseMessageContents } from './cleanup.preload.ts';
  import { notificationService } from '../services/notifications.preload.ts';
  import { DataWriter } from '../sql/Client.preload.ts';
 +import { postSaveUpdates } from '../util/cleanup.preload.js';
++import { itemStorage } from '../textsecure/Storage.preload.ts';
++import { drop } from '../util/drop.std.ts';
  
  const log = createLogger('deleteForEveryone');
  
-@@ -94,6 +95,26 @@ export async function applyDeleteForEveryone(
+@@ -94,6 +97,27 @@ export async function applyDeleteForEveryone(
    >,
    { shouldPersist = true }: { shouldPersist?: boolean } = {}
  ): Promise<void> {
@@ -61,10 +63,11 @@ index 2e6ba1d..b602c65 100644
 +  message.set({
 +    body: `❌ Deleted ❌ ${message.get('body')}`,
 +  });
++  message.deletingForEveryone = false;
 +  // Save the modifyed message to DB
 +  if (shouldPersist) {
 +    await DataWriter.saveMessage(message.attributes, {
-+      ourAci: window.textsecure.storage.user.getCheckedAci(),
++      ourAci: itemStorage.user.getCheckedAci(),
 +      postSaveUpdates,
 +    });
 +  }
