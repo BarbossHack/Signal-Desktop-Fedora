@@ -15,7 +15,7 @@ jobs:
     if: github.repository == 'BarbossHack/Signal-Desktop-Fedora'
     strategy:
       matrix:
-        fedora: [42, 43, 44]
+        fedora: [42, 43, 44, 45, rawhide]
         arch: [x86_64, aarch64]
         include:
           - arch: x86_64
@@ -90,7 +90,12 @@ jobs:
             fedora="$(basename "$(dirname "$(dirname "$f")")")"
             base="$(basename ${f%.rpm})"
             IFS=_ read -r name version arch <<< "$base"
-            mv "$f" "${name}_${version}_fc${fedora}_${arch}.rpm"
+            if [[ "$fedora" =~ ^[0-9]+$ ]]; then
+                dist="fc${fedora}"
+            else
+                dist="${fedora}"
+            fi
+            mv "$f" "${name}_${version}_${dist}_${arch}.rpm"
           done
       - name: Create GitHub Release Draft
         env:
