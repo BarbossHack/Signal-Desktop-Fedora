@@ -15,7 +15,7 @@ jobs:
     if: github.repository == 'BarbossHack/Signal-Desktop-Fedora'
     strategy:
       matrix:
-        fedora: [42, 43, 44, 45, rawhide]
+        fedora: [43, 44, 45, rawhide]
         arch: [x86_64, aarch64]
         include:
           - arch: x86_64
