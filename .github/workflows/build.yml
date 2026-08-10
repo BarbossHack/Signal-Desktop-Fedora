@@ -15,22 +15,22 @@ jobs:
     if: github.repository == 'BarbossHack/Signal-Desktop-Fedora'
     strategy:
       matrix:
-        fedora: [43, 44, 45, rawhide]
-        arch: [x86_64, aarch64]
+        releasever: [43, 44, 45, rawhide]
+        basearch: [x86_64, aarch64]
         include:
-          - arch: x86_64
+          - basearch: x86_64
             runner: ubuntu-latest
-          - arch: aarch64
+          - basearch: aarch64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Print matrix
         run: |
-          echo "fedora: ${{ matrix.fedora }}"
-          echo "arch: ${{ matrix.arch }}"
+          echo "releasever: ${{ matrix.releasever }}"
+          echo "basearch: ${{ matrix.basearch }}"
           echo "runner: ${{ matrix.runner }}"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - run: make ENGINE=docker SIGNAL_VERSION=${GITHUB_REF_NAME} FEDORA_VERSION=${{ matrix.fedora }}
+      - run: make ENGINE=docker SIGNAL_VERSION=${GITHUB_REF_NAME} FEDORA_VERSION=${{ matrix.releasever }}
       - name: Install tools
         run: |
           export DEBIAN_FRONTEND=noninteractive
@@ -42,16 +42,16 @@ jobs:
         run: echo "$REPO_PRIVATE_KEY" | gpg --batch --import
       - name: Create repository
         run: |
-          mkdir -p repo/${{ matrix.fedora }}/${{ matrix.arch }}
-          cp output/*.rpm repo/${{ matrix.fedora }}/${{ matrix.arch }}/
-          cd repo/${{ matrix.fedora }}/${{ matrix.arch }}
+          mkdir -p repo/${{ matrix.releasever }}/${{ matrix.basearch }}
+          cp output/*.rpm repo/${{ matrix.releasever }}/${{ matrix.basearch }}/
+          cd repo/${{ matrix.releasever }}/${{ matrix.basearch }}
           export GPG_TTY=$(tty)
           rpm --define "_gpg_name 98AD93E28D7EB8B7F990BF2E55827D8FD54C06D0" --addsign *.rpm
           createrepo_c --update .
           gpg --detach-sign --armor repodata/repomd.xml
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: repo-${{ matrix.fedora }}-${{ matrix.arch }}
+          name: repo-${{ matrix.releasever }}-${{ matrix.basearch }}
           path: repo
 
   deploy-repository:
@@ -87,15 +87,15 @@ jobs:
       - name: Rename artifacts
         run: |
           for f in $(find repo/ -name "*.rpm"); do
-            fedora="$(basename "$(dirname "$(dirname "$f")")")"
+            releasever="$(basename "$(dirname "$(dirname "$f")")")"
             base="$(basename ${f%.rpm})"
-            IFS=_ read -r name version arch <<< "$base"
-            if [[ "$fedora" =~ ^[0-9]+$ ]]; then
-                dist="fc${fedora}"
+            IFS=_ read -r name version basearch <<< "$base"
+            if [[ "$releasever" =~ ^[0-9]+$ ]]; then
+                dist="fc${releasever}"
             else
-                dist="${fedora}"
+                dist="${releasever}"
             fi
-            mv "$f" "${name}_${version}_${dist}_${arch}.rpm"
+            mv "$f" "${name}_${version}_${dist}_${basearch}.rpm"
           done
       - name: Create GitHub Release Draft
         env:
