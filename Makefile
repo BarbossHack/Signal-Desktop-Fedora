@@ -31,8 +31,8 @@ install:
 	@sudo sed -i 's|StartupWMClass=Signal|StartupWMClass=signal|g' /usr/share/applications/signal-desktop.desktop
 
 clean:
-	@-$(ENGINE) rm -f -t0 signal-desktop-rpm
-	@-$(ENGINE) unshare rm -rf ./output
+	@-$(ENGINE) rm -f signal-desktop-rpm
+	@-if [ "$(ENGINE)" = "podman" ]; then $(ENGINE) unshare rm -rf ./output; fi
 
 update-signal:
 	@NEW_SIGNAL_VERSION=$$(curl -s --fail https://api.github.com/repos/signalapp/Signal-Desktop/releases/latest | jq -r .tag_name | tr -d vV) \
@@ -45,7 +45,8 @@ update: update-signal
 		&& echo "FEDORA_VERSION: $$FEDORA_VERSION" \
 		&& sed -i "s/FEDORA_VERSION=.*/FEDORA_VERSION=$$FEDORA_VERSION/g" README.md \
 		&& sed -i -E "s/fc[0-9]{2}/fc$$FEDORA_VERSION/g" README.md \
-		&& sed -i "s/^FEDORA_VERSION := .*/FEDORA_VERSION := $$FEDORA_VERSION/g" Makefile
+		&& sed -i "s/^FEDORA_VERSION := .*/FEDORA_VERSION := $$FEDORA_VERSION/g" Makefile \
+		&& sed -i "s/^ARG FEDORA_VERSION=.*/ARG FEDORA_VERSION=$$FEDORA_VERSION/g" Dockerfile
 
 release:
 	@git add .

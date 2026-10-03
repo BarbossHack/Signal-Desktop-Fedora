@@ -1,5 +1,5 @@
-ARG ARCH
-ARG FEDORA_VERSION
+ARG ARCH=amd64
+ARG FEDORA_VERSION=44
 FROM docker.io/${ARCH}/fedora:${FEDORA_VERSION}
 
 # Install build requirements

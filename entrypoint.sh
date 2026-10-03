@@ -20,7 +20,8 @@ export NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
 export PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 
 # Install pnpm
-npm install -g "$(curl -sfL "https://github.com/signalapp/Signal-Desktop/raw/refs/tags/v${SIGNAL_VERSION}/package.json" | jq -r .packageManager)"
+packageManager=$(curl -sfL "https://github.com/signalapp/Signal-Desktop/raw/refs/tags/v${SIGNAL_VERSION}/package.json" | jq .devEngines.packageManager)
+npm install -g "$(echo "$packageManager" | jq -r .name)@$(echo "$packageManager" | jq -r .version)"
 
 # Clone and patch Signal-Desktop
 cd /root
