@@ -1,8 +1,8 @@
 diff --git a/package.json b/package.json
-index 0de695d..06c0579 100644
+index 0fed75f..ffded1c 100644
 --- a/package.json
 +++ b/package.json
-@@ -529,7 +529,7 @@
+@@ -508,7 +508,7 @@
        "artifactName": "${name}_${version}_${arch}.${ext}",
        "target": [
          {

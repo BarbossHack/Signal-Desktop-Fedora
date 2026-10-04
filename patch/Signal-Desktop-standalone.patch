@@ -16,14 +16,14 @@ index a8eb0ad..101a335 100644
        fileMenu.submenu.unshift({
          type: 'separator',
 diff --git a/ts/state/ducks/app.preload.ts b/ts/state/ducks/app.preload.ts
-index ca11661..2675b4a 100644
+index 4c0a0f9..2e9b986 100644
 --- a/ts/state/ducks/app.preload.ts
 +++ b/ts/state/ducks/app.preload.ts
-@@ -87,7 +87,6 @@ function openStandalone(): ThunkAction<
- > {
-   return dispatch => {
-     if (getEnvironment() === Environment.PackagedApp) {
+@@ -89,7 +89,6 @@ function openStandalone(
+       log.warn(
+         `openStandalone: refusing because environment is ${getEnvironment()}`
+       );
 -      return;
      }
  
-     window.IPC.addSetupMenuItems();
+     cancelInstall()(dispatch, getState, undefined);

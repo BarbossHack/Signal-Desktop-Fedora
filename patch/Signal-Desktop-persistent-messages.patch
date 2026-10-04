@@ -1,9 +1,9 @@
 diff --git a/ts/components/conversation/Message.dom.tsx b/ts/components/conversation/Message.dom.tsx
-index 009e29b..16bebba 100644
+index 2100008..d800216 100644
 --- a/ts/components/conversation/Message.dom.tsx
 +++ b/ts/components/conversation/Message.dom.tsx
-@@ -3488,7 +3488,7 @@ export class Message extends PureComponent<Props, State> {
-     const { expired, expiring, isTargeted, imageBroken } = this.state;
+@@ -3455,7 +3455,7 @@ export class Message extends PureComponent<Props, State> {
+     const { expired, expiring, imageBroken, flashing } = this.state;
  
      if (expired) {
 -      return null;
@@ -11,14 +11,14 @@ index 009e29b..16bebba 100644
      }
  
      if (isSticker && (imageBroken || !attachments || !attachments.length)) {
-@@ -3595,7 +3595,6 @@ export class Message extends PureComponent<Props, State> {
+@@ -3562,7 +3562,6 @@ export class Message extends PureComponent<Props, State> {
              shouldCollapseAbove && 'module-message--collapsed-above',
              shouldCollapseBelow && 'module-message--collapsed-below',
              isTargeted ? 'module-message--targeted' : null,
--            expiring ? 'module-message--expired' : null
+-            expiring ? 'module-message--expired' : null,
+             flashing ? 'module-message--flashing' : null
            )}
            data-testid={timestamp}
-           tabIndex={0}
 diff --git a/ts/services/expiringMessagesDeletion.preload.ts b/ts/services/expiringMessagesDeletion.preload.ts
 index 5df82e5..a46012e 100644
 --- a/ts/services/expiringMessagesDeletion.preload.ts
